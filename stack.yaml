@@ -50,12 +50,17 @@ flags:
                      cuda: false
                      llvm-ptx: false
                      llvm-cpu: true 
+
+      llvm-hs:                
+                     shared-llvm: true
+
+
 build:
       library-profiling: false
       executable-profiling: false
 
-ghc-options: 
-  llvm-hs: "-pgmc=/usr/bin/clang"
+#ghc-options: 
+   #llvm-hs: "-pgmc=/usr/bin/clang"
 
 
 
