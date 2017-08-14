@@ -1,0 +1,488 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "stack.yaml",
+			"settings":
+			{
+				"buffer_size": 3831,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "name:                wigner\nversion:             0.1.0.0\n-- synopsis:\n-- description:\nhomepage:            https://github.com/githubuser/wigner#readme\nlicense:             BSD3\nlicense-file:        LICENSE\nauthor:              Rinat Stryungis\nmaintainer:          lazybonesxp@gmail.com\ncopyright:           2017 Rinat Stryungis\ncategory:            \nbuild-type:          Simple\nextra-source-files:  README.md\ncabal-version:       >=1.10\n\nlibrary\n  hs-source-dirs:      src\n  exposed-modules:     Wigner, RwData, Hilbert\n  build-depends:       base >= 4.7 && < 5 , accelerate, accelerate-io , text , vector, accelerate-fft, matrix, accelerate-llvm-native\n  default-language:    Haskell2010\n\nexecutable wigner-exe\n  hs-source-dirs:      app\n  main-is:             Main.hs\n  ghc-options:         -O3 -threaded -rtsopts\n  build-depends:       base\n                     , wigner , accelerate, vector, accelerate-io, double-conversion, text, accelerate-llvm-native\n  default-language:    Haskell2010\n\ntest-suite wigner-test\n  type:                exitcode-stdio-1.0\n  hs-source-dirs:      test\n  main-is:             Spec.hs\n  build-depends:       base\n                     , wigner\n  ghc-options:         -threaded -rtsopts -with-rtsopts=-N\n  default-language:    Haskell2010\n\nsource-repository head\n  type:     git\n  location: https://github.com/githubuser/wigner\n",
+			"file": "wigner.cabal",
+			"file_size": 1363,
+			"file_write_time": 131470178907451559,
+			"settings":
+			{
+				"buffer_size": 1360,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/suhareva/Rinat/accelerate-fft/accelerate-fft.cabal",
+			"settings":
+			{
+				"buffer_size": 3741,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/suhareva/Rinat/accelerate-fft/stack.yaml",
+			"settings":
+			{
+				"buffer_size": 1927,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "module Hilbert where\n\nimport qualified Data.Array.Accelerate as A\nimport Data.Array.Accelerate.Array.Sugar as S \nimport qualified Data.Array.Accelerate.Math.FFT as AMF\nimport qualified Data.Array.Accelerate.Data.Complex as ADC\n\nezero :: A.Exp Double\nezero = A.constant 0\n\neone :: A.Exp Double\neone = A.constant 1 \n\netwo :: A.Exp Double \netwo = A.constant 2\n\nhilbert :: A.Acc (A.Array A.DIM1 Double) -> A.Acc (A.Array A.DIM1 (ADC.Complex Double))\nhilbert arr = \n  let leng = A.length arr \n      hVect = h (A.unit leng)\n  in  inverseFFT (loadArrayFFt arr) hVect\n\n-- | Scalar myltiplies our vector with h vector and make inverse FFT \n\ninverseFFT :: A.Acc (A.Array A.DIM1 (ADC.Complex Double)) -> A.Acc (A.Array A.DIM1 Double) -> A.Acc (A.Array A.DIM1 (ADC.Complex Double))\ninverseFFT arr h = AMF.fft1D' AMF.Inverse (A.Z A.:. 0) $ A.zipWith (A.*) arr (makeComplex h)\n\n-- | Load vector to GPU, make it complex and apply FFT\n\napplyFFt :: A.Acc (A.Array A.DIM1 Double) -> A.Acc (A.Array A.DIM1 (ADC.Complex Double))\napplyFFt arr = AMF.fft1D' AMF.Forward (A.Z A.:. 0) $ makeComplex arr\n\n-- | Form Vector that will be scalar multiplied with our spectre vector.\n\nh :: A.Acc (A.Scalar Int) -> A.Acc (A.Array A.DIM1 Double)\nh s = A.generate (A.index1 size) (\\ix -> let Z :. x = A.unlift ix in def (A.fromIntegral x))\n  where \n    size = A.the s \n    dsize = A.fromIntegral size\n    def x = A.ifThenElse (A.even size) (defEven x) (defOdd x)\n    defEven x = A.caseof x [(\\y ->(y A.== ezero) A.|| (y A.== (dsize/etwo)), eone),\n  \t  (\\y -> (x A.<= (dsize/etwo)), etwo)] ezero\n    defOdd x = A.caseof x [((\\y -> (y A.== ezero)), eone),\n      (\\y -> (y A.>= ((dsize A.+ eone)/etwo)), eone)] etwo\n\n-- | Make our array complex with zero imaginary part \n\nmakeComplex :: A.Acc (A.Array A.DIM1 Double) -> A.Acc (A.Array A.DIM1 (ADC.Complex Double))\nmakeComplex = A.map ((flip ADC.mkPolar) 0.0)",
+			"file": "src/Hilbert.hs",
+			"file_size": 1917,
+			"file_write_time": 131471094981835450,
+			"settings":
+			{
+				"buffer_size": 1870,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/Wigner.hs",
+			"settings":
+			{
+				"buffer_size": 7350,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/Main.hs",
+			"settings":
+			{
+				"buffer_size": 1565,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "Packages/User/haskell-stack.sublime-build",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/User/haskell-stack.sublime-build",
+					""
+				],
+				[
+					"Packages/User/haskell-stack.sublime-build",
+					"exec"
+				]
+			],
+			[
+				"Packages/User/haskell-stack.sublime-build",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 372.0,
+		"last_filter": "Package Control: ",
+		"selected_items":
+		[
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 401.0
+	},
+	"console":
+	{
+		"height": 146.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = 'df21e130d211cfc94d9b0905775a7c0f' + '1e3d39e33b79698005270310898eea76'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) "
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/suhareva/Rinat/wigner-ville-accelerate",
+		"/home/suhareva/Rinat/wigner-ville-accelerate/app",
+		"/home/suhareva/Rinat/wigner-ville-accelerate/src"
+	],
+	"file_history":
+	[
+		"/home/suhareva/.config/sublime-text-3/Packages/User/haskell-stack.sublime-build"
+	],
+	"find":
+	{
+		"height": 0.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"folders":
+	[
+		{
+			"path": "/home/suhareva/Rinat/wigner-ville-accelerate"
+		}
+	],
+	"groups":
+	[
+		{
+			"selected": 4,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "stack.yaml",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3831,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2350,
+								2350
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/YAML/YAML.sublime-syntax",
+							"tab_size": 3,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "wigner.cabal",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1360,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								993,
+								993
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/SublimeHaskell/Syntaxes/Cabal.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/home/suhareva/Rinat/accelerate-fft/accelerate-fft.cabal",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3741,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1066,
+								1066
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/SublimeHaskell/Syntaxes/Cabal.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/home/suhareva/Rinat/accelerate-fft/stack.yaml",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1927,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								372,
+								372
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/YAML/YAML.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "src/Hilbert.hs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1870,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								863,
+								863
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/SublimeHaskell/Syntaxes/Haskell-SublimeHaskell.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 342.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "src/Wigner.hs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7350,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								344,
+								344
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/SublimeHaskell/Syntaxes/Haskell-SublimeHaskell.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "app/Main.hs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1565,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								969,
+								969
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/SublimeHaskell/Syntaxes/Haskell-SublimeHaskell.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 228.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 273.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.sublime_haskell_error_panel":
+	{
+		"height": 118.0
+	},
+	"output.sublime_haskell_output_panel":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "Packages/User/haskell-stack.sublime-build",
+	"project": "",
+	"replace":
+	{
+		"height": 0.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 312.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
