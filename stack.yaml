@@ -15,7 +15,7 @@
 # resolver:
 #  name: custom-snapshot
 #  location: "./custom-snapshot.yaml"
-resolver: lts-8.23
+resolver: lts-9.1
 
 # User packages to be built.
 # Various formats can be used as shown in the example below.
@@ -37,65 +37,30 @@ resolver: lts-8.23
 # will not be run. This is useful for tweaking upstream packages.
 packages:
 - '.'
-- location: 
-    git:    https://github.com/AccelerateHS/accelerate-io.git
-    commit: 6e6fd16a380af2054ab6abe5fd2423e19dda783c
-  extra-dep: true 
-- location:
-    git:    https://github.com/AccelerateHS/accelerate-fft.git
-    commit: 413c7a170d592165f20e6e114afbd917b6569a3e
-  extra-dep: true
-- location:
-    git:    https://github.com/AccelerateHS/accelerate.git
-    commit: af7137f1c9aabc95d23ef2f480ec55d4b53e95b7
-  extra-dep: true
+- accelerate-llvm-master/accelerate-llvm-native
+- accelerate-llvm-master/accelerate-llvm
+- accelerate-master
+- accelerate-llvm-master/accelerate-llvm-ptx
+- accelerate-fft
+#- cuda-master
 
-- location:
-    git:    https://github.com/AccelerateHS/accelerate-llvm.git
-    commit: e1699b2f1f5c61b614121ef38d15f2f8da5c4b1d
-  extra-dep: true
-  subdirs:
-    - 'accelerate-llvm'
-    - 'accelerate-llvm-native'
-#
 # Dependency packages to be pulled from upstream that are not in the resolver
 # (e.g., acme-missiles-0.3)
 # extra-deps: [cufft-0.7.5.0,nvvm-0.7.5.2,accelerate-io-1.0.0.0,chaselev-deque-0.5.0.5,accelerate-fft-1.0.0.0,llvm-hs-4.2.0,llvm-hs-pure-4.1.0.0]
 
-extra-deps: [llvm-hs-4.1.0.0,chaselev-deque-0.5.0.5,llvm-hs-pure-4.1.0.0]
+extra-deps: [cuda-0.8.0.0, repa-3.4.1.3,nvvm-0.8.0.0, cufft-0.8.0.0, chaselev-deque-0.5.0.5,accelerate-io-1.0.0.0, llvm-hs-4.2.0,llvm-hs-pure-4.1.0.0]
 
 # Override default flag values for local packages and extra-deps
 flags:
       accelerate-fft: 
-                     llvm-ptx: false
+                     llvm-ptx: true
                      llvm-cpu: true 
-
-      llvm-hs:                
-                     shared-llvm: true 
-      accelerate:
-                     unsafe-checks: false
-                     bounds-checks: false
-                     debug: false
-                     internal-checks: false
-      accelerate-llvm:
-                     debug: false
-                     chase-lev: true
-      accelerate-llvm-native:
-                     debug: false
-#     accelerate-llvm-ptx:
-#                    debug: false
-#                    nvvm: false
-
 build:
       library-profiling: false
       executable-profiling: false
 
 ghc-options: 
-            wigner: "-with-rtsopts=-n2M -with-rtsopts=-A64M"
-
-#ghc-options: 
-   #llvm-hs: "-pgmc=/usr/bin/clang"
-
+            wigner: "-with-rtsopts=-n4M -with-rtsopts=-A128M"
 
 
 # Extra package databases containing global packages
