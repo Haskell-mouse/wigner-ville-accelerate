@@ -15,7 +15,7 @@
 # resolver:
 #  name: custom-snapshot
 #  location: "./custom-snapshot.yaml"
-resolver: lts-9.1
+resolver: nightly-2017-09-03
 
 # User packages to be built.
 # Various formats can be used as shown in the example below.
@@ -37,11 +37,25 @@ resolver: lts-9.1
 # will not be run. This is useful for tweaking upstream packages.
 packages:
 - '.'
-- accelerate-llvm-master/accelerate-llvm-native
-- accelerate-llvm-master/accelerate-llvm
-- accelerate-master
-- accelerate-llvm-master/accelerate-llvm-ptx
-- accelerate-fft
+#- accelerate-llvm-master/accelerate-llvm-native
+- location:
+    git: https://github.com/AccelerateHS/accelerate-llvm.git
+    commit: 979fb8029a33009847d119157f90abefb027a24b
+  subdirs: 
+    - accelerate-llvm
+    - accelerate-llvm-native
+    - accelerate-llvm-ptx
+  extra-dep: true
+
+- location: 
+    git: https://github.com/AccelerateHS/accelerate.git
+    commit: 1daff6959b6ec30cf1e13a087d576e3b2403585b
+  extra-dep: true
+#- accelerate-llvm-master/accelerate-llvm-ptx
+- location: 
+    git: https://github.com/Haskell-mouse/accelerate-fft.git
+    commit: 64379df6e7258b9e2782733984ba19f3cb4927e9
+  extra-dep: true
 #- cuda-master
 
 # Dependency packages to be pulled from upstream that are not in the resolver
@@ -52,9 +66,19 @@ extra-deps: [cuda-0.8.0.0, repa-3.4.1.3,nvvm-0.8.0.0, cufft-0.8.0.0, chaselev-de
 
 # Override default flag values for local packages and extra-deps
 flags:
-      accelerate-fft: 
-                     llvm-ptx: true
-                     llvm-cpu: true 
+      accelerate:
+                       unsafe-checks: false
+                       bounds-checks: false
+                       debug: false
+                       internal-checks: false
+      accelerate-llvm:
+                       debug: false
+                       chase-lev: true
+      accelerate-llvm-native:
+                       debug: false
+      accelerate-llvm-ptx:
+                       debug: false
+                       nvvm: false
 build:
       library-profiling: false
       executable-profiling: false

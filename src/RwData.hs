@@ -1,76 +1,103 @@
-{-# LANGUAGE BangPatterns #-}
-module RwData where
+{-# OPTIONS_HADDOCK ignore-exports #-}
+{-# LANGUAGE OverloadedStrings #-}
 
-import qualified Data.Text.IO as TI
-import qualified Data.Text as T
-import qualified Data.Vector.Storable  as U
-import qualified Data.Array.Accelerate as A
-import qualified Data.Array.Accelerate.IO as AI
-import Data.Either
-import Data.Char 
-import qualified Data.Text.Read as R
-import System.Environment
+-- | Module with parsers for command line arguments and cmd help.
 
-type Period = Double
+module RwData (opts) where
 
-parse :: [String] ->IO (Maybe ([A.Array A.DIM1 Double]))
-parse args 
-    | args == [] = do
-        putStrLn "usage: wigner [optional : '-p winfile(or winlength)' or '-sp winfile1(or timeWinLength) winfile2(or timeWinLength)'] datafile "
-        return Nothing
-    | (head args == "-h") || (head args == "--help") = do
-	    putStrLn "usage: wigner [optional : '-p winfile(or winlength)' or '-sp winfile1(or timeWinLength) winfile2(or timeWinLength)'] datafile "
-	    return Nothing
-    | (length args == 1) && (head args /= "-p") && (head args /= "-sp") = do
-    	dataV <- prepareDataWV (args)
-        return $! Just ([dataV])
-    | (head args == "-p") && (length args == 3) = do
-    	allData <- prepareDataPWV (init args)
-        return $! Just (allData)
-    | (head args == "-sp") && (length args == 4) = do
-        allData <- prepareDataSPWV args
-        return $! Just (allData)
-    | otherwise = do
-	    putStrLn "usage: wigner [optional : '-p winfile(or winlength)' or '-sp winfile1(or timeWinLength) winfile2(or timeWinLength)']  datafile "
-	    return Nothing
+import PseudoWigner
+import Data.Text as T
+import Options.Applicative as O
+import Data.Semigroup ((<>))
+default (T.Text)
 
-prepareDataWV :: [String] -> IO (A.Array A.DIM1 Double)
-prepareDataWV args = do
-     let filename = head args
-     dataV <- readVectFile filename
-     return $! dataV
+data WVMode = WV | PWV | SPWV 
+data Opts = OptsWV FilePath CalcDev FilePath | OptsPWV FilePath CalcDev Int WindowFunc FilePath | OptsSPWV FilePath CalcDev Int WindowFunc Int WindowFunc FilePath
+data CalcDev = CPU | GPU
+-- | This function uses execParser function to do all work with catching cmd arguments
+-- and parse it with parser that has been created by combine of simple parsers. 
+
+opts :: IO Opts
+opts = execParser optI
+
+-- | Parse function . Combine parser for cmd args with info about program. 
+
+optI :: ParserInfo Opts
+optI = info ((optWV <|> optPWV) <**> helper) ( header "Test router perfomance through Iperf3")
+
+-- | Parse function for cmd args. It just combine parsers for each option. 
+
+optWV :: O.Parser Opts
+optWV = OptsWV 
+  <$> wData
+  <*> gpu_cpu
+  <*> oData
+
+optPWV :: O.Parser Opts  
+optPWV = OptsPWV
+  <$> wData
+  <*> gpu_cpu
+  <*> twindow
+  <*> winfunc
+  <*> oData
 
 
-prepareDataPWV :: [String] -> IO [A.Array A.DIM1 Double]
-prepareDataPWV args = do
-    let timeWindowFile = head args
-    let dataFile = head (tail args)
-    dataV <- readVectFile dataFile
-    tWindow <- readVectFile timeWindowFile
-    return $! [tWindow,dataV]
+wData :: O.Parser FilePath
+wData = strOption
+ (   long "data"
+  <> short 'D'
+  <> metavar "FILE"
+  <> help "File with data for Wigner-Ville distribution."
+ )
 
-prepareDataSPWV :: [String] -> IO [A.Array A.DIM1 Double]
-prepareDataSPWV args = do
-    allData <- mapM readVectFile $ tail args
-    return $! allData
+oData :: O.Parser FilePath
+oData = strOption
+ (   long "output"
+  <> short 'O'
+  <> metavar "FILE"
+  <> help "Name of file for output data."
+ )
 
-readVectFile :: String -> IO (A.Array A.DIM1 Double)
-readVectFile file = do
-	s <- TI.readFile file
-	let vect = parseText (T.snoc s ' ')
-	let vlength = U.length vect 
-	return $ AI.fromVectors (A.Z A.:. vlength) vect 
+-- | Flag to check if we should clean FW rules before testing. 
 
-parseText :: T.Text -> U.Vector Double
-parseText = U.unfoldr step
-  where
-     step !s = case R.double s of
-        Right (!k, !t) -> Just (k,T.tail t)
-        Left _ -> Nothing 
+pseudo :: O.Parser WVMode
+pseudo = flag WV PWV
+  (   long "pseudo"  
+   <> short 'P'
+   <> help "Make peudo Wigner-Ville distribution. You shoud add window leng(Odd) and window function."
+  )
 
-newVect :: Int -> A.Array A.DIM1 Double
-newVect num 
-    | even num = let list = take num $ repeat 1
-                     lengthL = length list
-                 in  A.fromList (A.Z A.:. lengthL) list
-	| odd num  = newVect (num+1)
+smooth_pseudo :: O.Parser WVMode
+smooth_pseudo = flag WV SPWV
+  (   long "smoothed-pseudo"  
+   <> short 'S'
+   <> help "Make smoothed peudo Wigner-Ville distribution. You shoud add window leng(Odd) and window function."
+  )
+
+gpu_cpu :: O.Parser CalcDev
+gpu_cpu = flag CPU GPU
+  (   long "gpu"  
+   <> short 'G'
+   <> help "Set GPU as main calculation device."
+  ) 
+
+twindow :: O.Parser Int
+twindow = option auto
+  (   long "twindow"
+   <> short 'T'
+   <> metavar "Legth"
+   <> showDefault
+   <> value 1025
+   <> help "Length of window in time domain."
+  )
+
+winfunc :: O.Parser WindowFunc
+winfunc = option auto 
+  (   long "winfunc"
+   <> short 'F'
+   <> metavar "WinFunc"
+   <> showDefault
+   <> value Rect
+   <> help "Select window function."
+  )
+

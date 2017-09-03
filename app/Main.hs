@@ -7,6 +7,7 @@ module Main where
 import RwData
 import Wigner
 import Hilbert
+import PseudoWigner
 import Data.Either
 import qualified Data.Array.IArray as IA
 import qualified Data.Array.Accelerate as A
@@ -36,9 +37,10 @@ import qualified Data.Vector as V
 main :: IO ()
 main = do
   args <- getArgs
-  let num = A.fromList (A.Z) $ [w]
-      fr = S.toList $ ALP.run1 makeGlobal num
-      w = read $ head args :: Int 
+  let num = A.fromList (A.Z A.:.w) $ (map fromIntegral [0..(w-1)] :: [Float])
+      !fr = S.toList $ ALP.run1 ((curry pWignerVille) (makeWindow Hamming (A.unit $ A.constant 5)) . hilbert) num
+      w = read $ head args :: Int
+  putStrLn "Test !"
   file <- openFile "wigner.txt" WriteMode
   writeString file fr w 1
   hClose file
@@ -56,8 +58,5 @@ writeString file (x:xs) w n = do
 readLines :: FilePath -> IO [String]
 readLines = fmap lines . readFile
 
-makeDouble :: [String] -> [Double]
-makeDouble = map read
-
---start :: [A.Array A.DIM1 Double] -> Period -> Maybe (A.Array A.DIM2 (ADC.Complex Double))
---start vectors period = Just  (wignerVille (ALI.run $ hylbert vectors))
+makeFloat :: [String] -> [Float]
+makeFloat = map read
