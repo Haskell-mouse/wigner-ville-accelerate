@@ -3,7 +3,7 @@
 
 -- | Module with parsers for command line arguments and cmd help.
 
-module RwData (opts) where
+module ParseArgs(WVMode(..), opts, Opts(..), CalcDev(..)) where
 
 import PseudoWigner
 import Data.Text as T
@@ -12,7 +12,7 @@ import Data.Semigroup ((<>))
 default (T.Text)
 
 data WVMode = WV | PWV | SPWV 
-data Opts = OptsWV FilePath CalcDev FilePath | OptsPWV FilePath CalcDev Int WindowFunc FilePath | OptsSPWV FilePath CalcDev Int WindowFunc Int WindowFunc FilePath
+data Opts = OptsWV FilePath CalcDev | OptsPWV FilePath CalcDev Int WindowFunc | OptsSPWV FilePath CalcDev Int WindowFunc Int WindowFunc
 data CalcDev = CPU | GPU
 -- | This function uses execParser function to do all work with catching cmd arguments
 -- and parse it with parser that has been created by combine of simple parsers. 
@@ -29,34 +29,26 @@ optI = info ((optWV <|> optPWV) <**> helper) ( header "Test router perfomance th
 
 optWV :: O.Parser Opts
 optWV = OptsWV 
-  <$> wData
+  <$> dataPath
   <*> gpu_cpu
-  <*> oData
 
 optPWV :: O.Parser Opts  
-optPWV = OptsPWV
-  <$> wData
+optPWV = pseudo 
+   *> (OptsPWV
+  <$> dataPath
   <*> gpu_cpu
   <*> twindow
-  <*> winfunc
-  <*> oData
+  <*> winfunc )
 
 
-wData :: O.Parser FilePath
-wData = strOption
+dataPath :: O.Parser FilePath
+dataPath = strOption
  (   long "data"
   <> short 'D'
-  <> metavar "FILE"
-  <> help "File with data for Wigner-Ville distribution."
+  <> metavar "PATH"
+  <> help "Path with files for Wigner-Ville distribution."
  )
 
-oData :: O.Parser FilePath
-oData = strOption
- (   long "output"
-  <> short 'O'
-  <> metavar "FILE"
-  <> help "Name of file for output data."
- )
 
 -- | Flag to check if we should clean FW rules before testing. 
 
@@ -88,7 +80,7 @@ twindow = option auto
    <> metavar "Legth"
    <> showDefault
    <> value 1025
-   <> help "Length of window in time domain."
+   <> help "Length of frequency smoothing window in time domain."
   )
 
 winfunc :: O.Parser WindowFunc

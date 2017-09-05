@@ -14,7 +14,7 @@ import qualified Data.Array.Accelerate.Math.FFT as AMF
 import qualified Data.Array.Accelerate.Data.Complex as ADC
 
 
-hilbert :: A.Acc (A.Array A.DIM1 Float) -> A.Acc (A.Array A.DIM1 (ADC.Complex Float))
+hilbert :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e) => A.Acc (A.Array A.DIM1 e) -> A.Acc (A.Array A.DIM1 (ADC.Complex e))
 hilbert arr = 
   let leng = A.length arr 
       hVect = h (A.unit leng)
@@ -22,17 +22,17 @@ hilbert arr =
 
 -- | Scalar myltiplies our vector with h vector and make inverse FFT 
 
-inverseFFT :: A.Acc (A.Array A.DIM1 (ADC.Complex Float)) -> A.Acc (A.Array A.DIM1 Float) -> A.Acc (A.Array A.DIM1 (ADC.Complex Float))
+inverseFFT :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e) => A.Acc (A.Array A.DIM1 (ADC.Complex e)) -> A.Acc (A.Array A.DIM1 e) -> A.Acc (A.Array A.DIM1 (ADC.Complex e))
 inverseFFT arr h = AMF.fft1D' AMF.Inverse (A.Z A.:. 16) $ A.zipWith (A.*) arr (A.map makeComplex h)
 
 -- | Load vector to GPU, make it complex and apply FFT
 
-applyFFt :: A.Acc (A.Array A.DIM1 Float) -> A.Acc (A.Array A.DIM1 (ADC.Complex Float))
+applyFFt :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e) => A.Acc (A.Array A.DIM1 e) -> A.Acc (A.Array A.DIM1 (ADC.Complex e))
 applyFFt arr = AMF.fft1D' AMF.Forward (A.Z A.:. 16) $ A.map makeComplex $ arr
 
 -- | Form Vector that will be scalar multiplied with our spectre vector.
 
-h :: A.Acc (A.Scalar Int) -> A.Acc (A.Array A.DIM1 Float)
+h :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e) =>  A.Acc (A.Scalar Int) -> A.Acc (A.Array A.DIM1 e)
 h s = A.generate (A.index1 size) (\ix -> let A.Z A.:. x = A.unlift ix in def (A.fromIntegral x :: A.Exp Float))
   where 
     size = A.the s 
