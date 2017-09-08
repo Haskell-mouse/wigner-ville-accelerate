@@ -12,8 +12,10 @@ import Data.Semigroup ((<>))
 default (T.Text)
 
 data WVMode = WV | PWV | SPWV 
-data Opts = OptsWV FilePath CalcDev | OptsPWV FilePath CalcDev Int WindowFunc | OptsSPWV FilePath CalcDev Int WindowFunc Int WindowFunc
+type NoSubAVG = Bool
+data Opts = OptsWV FilePath CalcDev NoSubAVG | OptsPWV FilePath CalcDev Int WindowFunc NoSubAVG | OptsSPWV FilePath CalcDev Int WindowFunc Int WindowFunc NoSubAVG
 data CalcDev = CPU | GPU
+
 -- | This function uses execParser function to do all work with catching cmd arguments
 -- and parse it with parser that has been created by combine of simple parsers. 
 
@@ -31,6 +33,7 @@ optWV :: O.Parser Opts
 optWV = OptsWV 
   <$> dataPath
   <*> gpu_cpu
+  <*> no_subtract_avg
 
 optPWV :: O.Parser Opts  
 optPWV = pseudo 
@@ -38,8 +41,8 @@ optPWV = pseudo
   <$> dataPath
   <*> gpu_cpu
   <*> twindow
-  <*> winfunc )
-
+  <*> winfunc
+  <*> no_subtract_avg )
 
 dataPath :: O.Parser FilePath
 dataPath = strOption
@@ -93,3 +96,9 @@ winfunc = option auto
    <> help "Select window function."
   )
 
+no_subtract_avg :: O.Parser NoSubAVG
+no_subtract_avg = switch
+  (   long "no-subtract-average"
+   <> short 'N'
+   <> help "If enabled, then dont subtract average value from all elemets of array before Hilbert transform."
+  )

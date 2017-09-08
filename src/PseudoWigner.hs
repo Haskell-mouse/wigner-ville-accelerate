@@ -26,7 +26,8 @@ import Debug.Trace
 data WindowFunc = Rect | Sin | Lanczos | Hanning | Hamming
   deriving (Read, Show)
 
-makeWindow :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e) => WindowFunc -> A.Acc (Scalar Int) -> A.Acc (A.Array A.DIM1 e)
+makeWindow :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e) => 
+  WindowFunc -> A.Acc (Scalar Int) -> A.Acc (A.Array A.DIM1 e)
 makeWindow func leng = 
   case func of 
     Rect -> A.fill (A.index1 $ A.the leng) 1.0
@@ -35,7 +36,8 @@ makeWindow func leng =
     Hanning -> A.generate (A.index1 $ A.the leng) (\sh -> let (A.Z A.:.x) = A.unlift sh in 0.5 - (0.5 * (cos (2*pi*(A.fromIntegral (x + 1))/(A.fromIntegral $ A.the leng + 1)))))
     Hamming -> A.generate (A.index1 $ A.the leng) (\sh -> let (A.Z A.:.x) = A.unlift sh in 0.54 - (0.46 * (cos (2*pi*(A.fromIntegral (x + 1))/(A.fromIntegral $ A.the leng + 1)))))
 
-pWignerVille :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e) => (A.Acc (A.Array A.DIM1 e), A.Acc (A.Array A.DIM1 (ADC.Complex e))) -> A.Acc (A.Array A.DIM2 e)
+pWignerVille :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e) => 
+  (A.Acc (A.Array A.DIM1 e), A.Acc (A.Array A.DIM1 (ADC.Complex e))) -> A.Acc (A.Array A.DIM2 e)
 pWignerVille (window, arr) = 
   let times = A.enumFromN (A.index1 leng) 0 :: A.Acc (Array DIM1 Int)
       leng = A.length arr
@@ -46,7 +48,8 @@ pWignerVille (window, arr) =
 taumax :: A.Exp Int -> A.Exp Int -> A.Exp Int -> A.Exp Int
 taumax leng lh t = min (min (min t (leng - t - 1) ) (A.round (((A.fromIntegral leng :: A.Exp Double)/2.0) - 1))) lh
 
-taumaxs :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e) => A.Acc (A.Array A.DIM1 Int) -> A.Acc (A.Array A.DIM1 e) -> A.Acc (A.Array A.DIM1 Int)
+taumaxs :: (A.RealFloat e, Elt e) => 
+  A.Acc (A.Array A.DIM1 Int) -> A.Acc (A.Array A.DIM1 e) -> A.Acc (A.Array A.DIM1 Int)
 taumaxs times window = 
   let leng = A.length times
       lh = (A.length window - 1) `div` 2
@@ -67,11 +70,13 @@ moveUp taumaxs leng sh =
   let taum t = taumaxs A.!! t 
   in (\(x,t) -> A.index2 ((x+(taum t)) `A.mod` leng) t) $ A.unlift $ A.unindex2 sh
 
-generateValue :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e) => A.Acc (A.Array A.DIM1 (ADC.Complex e)) -> A.Exp Int -> A.Exp Int -> A.Exp e -> A.Exp (ADC.Complex e)
+generateValue :: (A.RealFloat e, Elt e) => 
+  A.Acc (A.Array A.DIM1 (ADC.Complex e)) -> A.Exp Int -> A.Exp Int -> A.Exp e -> A.Exp (ADC.Complex e)
 generateValue arr time tau h = (makeComplex h) * (arr A.!! (time + tau)) * (ADC.conjugate $ arr A.!! (time - tau))
 
 
-createMatrix :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e) => A.Acc (A.Array A.DIM1 (ADC.Complex e)) -> A.Acc (A.Array A.DIM1 e) -> A.Acc (A.Array A.DIM1 Int) -> A.Acc (A.Array A.DIM1 Int) -> A.Acc (A.Array A.DIM2 (ADC.Complex e)) 
+createMatrix :: (A.RealFloat e, Elt e) => 
+  A.Acc (A.Array A.DIM1 (ADC.Complex e)) -> A.Acc (A.Array A.DIM1 e) -> A.Acc (A.Array A.DIM1 Int) -> A.Acc (A.Array A.DIM1 Int) -> A.Acc (A.Array A.DIM2 (ADC.Complex e)) 
 createMatrix arr window taumaxs lims = A.transpose $ A.backpermute (A.index2 leng leng) (moveUp taumaxs leng) raw 
   where
     raw = A.generate (A.index2 leng leng) (\sh -> let (A.Z A.:.x A.:. t) = A.unlift sh

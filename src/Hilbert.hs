@@ -13,12 +13,14 @@ import Data.Array.Accelerate.Array.Sugar as S
 import qualified Data.Array.Accelerate.Math.FFT as AMF
 import qualified Data.Array.Accelerate.Data.Complex as ADC
 
-
-hilbert :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e) => A.Acc (A.Array A.DIM1 e) -> A.Acc (A.Array A.DIM1 (ADC.Complex e))
-hilbert arr = 
+hilbert :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e) => (A.Acc (A.Scalar Bool), A.Acc (A.Array A.DIM1 e)) -> A.Acc (A.Array A.DIM1 (ADC.Complex e))
+hilbert (supAVG, arr) = 
   let leng = A.length arr 
       hVect = h (A.unit leng)
-  in  inverseFFT (applyFFt arr) hVect
+      sup = A.the supAVG
+      avg = (A.the $ A.sum arr)/(A.fromIntegral leng)
+      finalArr = A.acond sup ((A.map (\x -> x - avg)) arr) arr 
+  in  inverseFFT (applyFFt finalArr) hVect
 
 -- | Scalar myltiplies our vector with h vector and make inverse FFT 
 

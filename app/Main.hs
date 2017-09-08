@@ -43,8 +43,8 @@ main :: IO ()
 main = do
   args <- opts
   case args of 
-       (OptsWV _ _) -> makeWVall args
-       (OptsPWV _ _ _ _) -> makePWVall args
+       (OptsWV _ _ _) -> makeWVall args
+       (OptsPWV _ _ _ _ _) -> makePWVall args
   
 writeString :: Handle -> [Double] -> Int -> Int -> IO ()
 writeString _ [] _ _  = return ()
@@ -57,7 +57,7 @@ writeString file (x:xs) w n = do
   else writeString file xs w (n + 1)
 
 makePWVall :: Opts -> IO ()
-makePWVall (OptsPWV path dev wlen wfun) = do
+makePWVall (OptsPWV path dev wlen wfun nosupAVG) = do
   if (even wlen)
   then error "Window length maust be odd !!"
   else do  
@@ -65,24 +65,26 @@ makePWVall (OptsPWV path dev wlen wfun) = do
     setCurrentDirectory path 
     let fFiles = filter (isSuffixOf ".txt") files
     let window = makeWindow wfun (A.unit $ A.constant wlen) :: A.Acc (A.Array A.DIM1 Double)
-    mapM_ (makePWV dev window) fFiles
+        supAVG = A.unit $ A.constant $ not nosupAVG
+    mapM_ (makePWV dev window supAVG) fFiles
 
-makePWV :: CalcDev -> A.Acc (A.Array A.DIM1 Double) -> FilePath -> IO ()
-makePWV dev window file = do 
+makePWV :: CalcDev -> A.Acc (A.Array A.DIM1 Double) -> A.Acc (Scalar Bool) -> FilePath -> IO ()
+makePWV dev window supAVG file = do 
   putStrLn $ "processing " ++ file ++ "..."
   text <- TI.readFile file
   let (Right dataF) = parseOnly parseFile text
-  mapM_ (startPWV dev window file) dataF
+  mapM_ (startPWV dev window file supAVG) dataF
 
-startPWV :: CalcDev -> A.Acc (A.Array A.DIM1 Double) -> FilePath -> (T.Text,[Double]) -> IO ()
-startPWV dev window oldName (file,dataF) = do
-  let newFName = oldName ++ "-" ++ T.unpack file ++ ".txt" ++ " ..."
-  putStr $ "   Creating file " ++ newFName 
+startPWV :: CalcDev -> A.Acc (A.Array A.DIM1 Double) -> FilePath -> A.Acc (Scalar Bool) -> (T.Text,[Double]) -> IO ()
+startPWV dev window oldName supAVG (file,dataF) = do
+  let newFName = oldName ++ "-" ++ T.unpack file ++ ".txt"
+  putStr $ "   Creating file " ++ newFName ++ " ..."
   let leng = length dataF
+
       pData = A.fromList (A.Z A.:. leng) dataF
       processed = case dev of 
-                    CPU -> ALN.run1 (((curry pWignerVille) window) . hilbert) pData
-                    GPU -> ALP.run1 (((curry pWignerVille) window) . hilbert) pData
+                    CPU -> ALN.run1 (((curry pWignerVille) window) . ((curry hilbert) supAVG)) pData
+                    GPU -> ALP.run1 (((curry pWignerVille) window) . ((curry hilbert) supAVG)) pData
       pList = S.toList processed
   file <- openFile newFName WriteMode
   writeString file pList leng 1
@@ -90,29 +92,30 @@ startPWV dev window oldName (file,dataF) = do
   putStrLn "Done !"
 
 makeWVall :: Opts -> IO ()
-makeWVall (OptsWV path dev) = do 
+makeWVall (OptsWV path dev nosupAVG) = do 
   files <- listDirectory path
   setCurrentDirectory path 
   let fFiles = filter (isSuffixOf ".txt") files
-  mapM_ (makeWV dev) fFiles
+      supAVG = A.unit $ A.constant $ not nosupAVG
+  mapM_ (makeWV dev supAVG) fFiles
        
 
-makeWV :: CalcDev -> FilePath -> IO ()
-makeWV dev file = do 
+makeWV :: CalcDev -> A.Acc (Scalar Bool) -> FilePath -> IO ()
+makeWV dev supAVG file = do 
   putStrLn $ "processing " ++ file ++ "..."
   text <- TI.readFile file
   let (Right dataF) = parseOnly parseFile text
-  mapM_ (startWV dev file) dataF
+  mapM_ (startWV dev file supAVG) dataF
   
-startWV :: CalcDev -> FilePath -> (T.Text,[Double]) -> IO ()
-startWV dev oldName (file,dataF) = do 
+startWV :: CalcDev -> FilePath -> A.Acc (Scalar Bool) -> (T.Text,[Double]) -> IO ()
+startWV dev oldName supAVG (file,dataF) = do 
   let newFName = oldName ++ "-" ++ T.unpack file ++ ".txt"
   putStr $ "   Creating file " ++ newFName ++ " ..."
   let leng = length dataF
       pData = A.fromList (A.Z A.:. leng) dataF
       processed = case dev of 
-                    CPU -> ALN.run1 (wignerVille . hilbert) pData
-                    GPU -> ALP.run1 (wignerVille . hilbert) pData
+                    CPU -> ALN.run1 (wignerVille . (curry hilbert) supAVG) pData
+                    GPU -> ALP.run1 (wignerVille . (curry hilbert) supAVG) pData
       pList = S.toList processed
   file <- openFile newFName WriteMode
   writeString file pList leng 1
