@@ -72,8 +72,10 @@ makePWV :: CalcDev -> A.Acc (A.Array A.DIM1 Double) -> A.Acc (Scalar Bool) -> Fi
 makePWV dev window supAVG file = do 
   putStrLn $ "processing " ++ file ++ "..."
   text <- TI.readFile file
-  let (Right dataF) = parseOnly parseFile text
-  mapM_ (startPWV dev window file supAVG) dataF
+  let parseRes = parseOnly parseFile text
+  case parseRes of 
+    (Left errStr) -> error $ errStr
+    (Right dataF) -> mapM_ (startWV dev file supAVG) dataF
 
 startPWV :: CalcDev -> A.Acc (A.Array A.DIM1 Double) -> FilePath -> A.Acc (Scalar Bool) -> (T.Text,[Double]) -> IO ()
 startPWV dev window oldName supAVG (file,dataF) = do
@@ -104,8 +106,10 @@ makeWV :: CalcDev -> A.Acc (Scalar Bool) -> FilePath -> IO ()
 makeWV dev supAVG file = do 
   putStrLn $ "processing " ++ file ++ "..."
   text <- TI.readFile file
-  let (Right dataF) = parseOnly parseFile text
-  mapM_ (startWV dev file supAVG) dataF
+  let parseRes = parseOnly parseFile text
+  case parseRes of 
+    (Left errStr) -> error $ errStr
+    (Right dataF) -> mapM_ (startWV dev file supAVG) dataF
   
 startWV :: CalcDev -> FilePath -> A.Acc (Scalar Bool) -> (T.Text,[Double]) -> IO ()
 startWV dev oldName supAVG (file,dataF) = do 
