@@ -57,7 +57,7 @@ writeString file (x:xs) w n = do
   else writeString file xs w (n + 1)
 
 makePWVall :: Opts -> IO ()
-makePWVall (OptsPWV path dev wlen wfun nosupAVG) = do
+makePWVall (OptsPWV path dev wlen wfun nosAVGflag) = do
   if (even wlen)
   then error "Window length maust be odd !!"
   else do  
@@ -65,28 +65,27 @@ makePWVall (OptsPWV path dev wlen wfun nosupAVG) = do
     setCurrentDirectory path 
     let fFiles = filter (isSuffixOf ".txt") files
     let window = makeWindow wfun (A.unit $ A.constant wlen) :: A.Acc (A.Array A.DIM1 Double)
-        supAVG = A.unit $ A.constant $ not nosupAVG
-    mapM_ (makePWV dev window supAVG) fFiles
+        sAVGflag = A.constant $ not nosAVGflag
+    mapM_ (makePWV dev window sAVGflag) fFiles
 
-makePWV :: CalcDev -> A.Acc (A.Array A.DIM1 Double) -> A.Acc (Scalar Bool) -> FilePath -> IO ()
-makePWV dev window supAVG file = do 
+makePWV :: CalcDev -> A.Acc (A.Array A.DIM1 Double) -> A.Exp Bool -> FilePath -> IO ()
+makePWV dev window sAVGflag file = do 
   putStrLn $ "processing " ++ file ++ "..."
-  text <- TI.readFile file
-  let parseRes = parseOnly parseFile text
+  text <- TI.readFile file 
+  let parseRes = parseOnly parseFile text 
   case parseRes of 
-    (Left errStr) -> error $ errStr
-    (Right dataF) -> mapM_ (startWV dev file supAVG) dataF
+    (Left errStr) -> error $ errStr 
+    (Right dataF) -> mapM_ (startPWV dev window file sAVGflag) dataF 
 
-startPWV :: CalcDev -> A.Acc (A.Array A.DIM1 Double) -> FilePath -> A.Acc (Scalar Bool) -> (T.Text,[Double]) -> IO ()
-startPWV dev window oldName supAVG (file,dataF) = do
+startPWV :: CalcDev -> A.Acc (A.Array A.DIM1 Double) -> FilePath -> A.Exp Bool -> (T.Text,[Double]) -> IO ()
+startPWV dev window oldName sAVGflag (file,dataF) = do
   let newFName = oldName ++ "-" ++ T.unpack file ++ ".txt"
   putStr $ "   Creating file " ++ newFName ++ " ..."
   let leng = length dataF
-
       pData = A.fromList (A.Z A.:. leng) dataF
       processed = case dev of 
-                    CPU -> ALN.run1 (((curry pWignerVille) window) . ((curry hilbert) supAVG)) pData
-                    GPU -> ALP.run1 (((curry pWignerVille) window) . ((curry hilbert) supAVG)) pData
+                    CPU -> ALN.run1 (((curry pWignerVille) window) . hilbert . supAVG sAVGflag) pData
+                    GPU -> ALP.run1 (((curry pWignerVille) window) . hilbert . supAVG sAVGflag) pData
       pList = S.toList processed
   file <- openFile newFName WriteMode
   writeString file pList leng 1
@@ -94,34 +93,40 @@ startPWV dev window oldName supAVG (file,dataF) = do
   putStrLn "Done !"
 
 makeWVall :: Opts -> IO ()
-makeWVall (OptsWV path dev nosupAVG) = do 
+makeWVall (OptsWV path dev nosAVGflag) = do 
   files <- listDirectory path
   setCurrentDirectory path 
   let fFiles = filter (isSuffixOf ".txt") files
-      supAVG = A.unit $ A.constant $ not nosupAVG
-  mapM_ (makeWV dev supAVG) fFiles
+      sAVGflag = A.constant $ not nosAVGflag
+  mapM_ (makeWV dev sAVGflag) fFiles
        
 
-makeWV :: CalcDev -> A.Acc (Scalar Bool) -> FilePath -> IO ()
-makeWV dev supAVG file = do 
+makeWV :: CalcDev -> A.Exp Bool -> FilePath -> IO ()
+makeWV dev sAVGflag file = do 
   putStrLn $ "processing " ++ file ++ "..."
   text <- TI.readFile file
   let parseRes = parseOnly parseFile text
   case parseRes of 
     (Left errStr) -> error $ errStr
-    (Right dataF) -> mapM_ (startWV dev file supAVG) dataF
+    (Right dataF) -> mapM_ (startWV dev file sAVGflag) dataF
   
-startWV :: CalcDev -> FilePath -> A.Acc (Scalar Bool) -> (T.Text,[Double]) -> IO ()
-startWV dev oldName supAVG (file,dataF) = do 
+startWV :: CalcDev -> FilePath -> A.Exp Bool -> (T.Text,[Double]) -> IO ()
+startWV dev oldName sAVGflag (file,dataF) = do 
   let newFName = oldName ++ "-" ++ T.unpack file ++ ".txt"
   putStr $ "   Creating file " ++ newFName ++ " ..."
   let leng = length dataF
       pData = A.fromList (A.Z A.:. leng) dataF
       processed = case dev of 
-                    CPU -> ALN.run1 (wignerVille . (curry hilbert) supAVG) pData
-                    GPU -> ALP.run1 (wignerVille . (curry hilbert) supAVG) pData
+                    CPU -> ALN.run1 (wignerVille . hilbert . supAVG sAVGflag) pData
+                    GPU -> ALP.run1 (wignerVille . hilbert . supAVG sAVGflag) pData
       pList = S.toList processed
   file <- openFile newFName WriteMode
   writeString file pList leng 1
   hClose file
   putStrLn "Done !"
+
+supAVG :: A.Exp Bool -> A.Acc (Array DIM1 Double) -> A.Acc (Array DIM1 Double)
+supAVG flag arr = 
+  A.acond flag (A.map (\x -> x - avg) arr) arr
+  where leng = A.length arr
+        avg = (A.the $ A.sum arr)/(A.fromIntegral leng)
