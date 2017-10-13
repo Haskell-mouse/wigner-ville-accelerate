@@ -3,94 +3,454 @@
 	{
 		"selected_items":
 		[
+			[
+				"sup",
+				"supAVG"
+			],
+			[
+				"apply",
+				"applyFFt"
+			],
+			[
+				"inverse",
+				"inverseFFT"
+			],
+			[
+				"h",
+				"hilbert"
+			],
+			[
+				"smoo",
+				"smoothMatrix"
+			],
+			[
+				"to",
+				"toPrecision"
+			],
+			[
+				"write",
+				"writeFile1"
+			],
+			[
+				"text",
+				"text"
+			],
+			[
+				"deri",
+				"deriving"
+			],
+			[
+				"Ins",
+				"instance\tkeyword"
+			],
+			[
+				"run",
+				"runPrsEP"
+			],
+			[
+				"n",
+				"newtype\tNewtype"
+			],
+			[
+				"runP",
+				"runPrsE"
+			],
+			[
+				"concat",
+				"concat0C"
+			],
+			[
+				"conca",
+				"concat30C"
+			],
+			[
+				"last",
+				"lastName"
+			],
+			[
+				"age",
+				"ageStr"
+			],
+			[
+				"ag",
+				"ageStr"
+			],
+			[
+				"Inco",
+				"IncorrectDataError"
+			],
+			[
+				"con",
+				"construct"
+			],
+			[
+				"String",
+				"String"
+			],
+			[
+				"de",
+				"deriving\tkeyword"
+			],
+			[
+				"f",
+				"f"
+			],
+			[
+				"crea",
+				"createGPU"
+			],
+			[
+				"len",
+				"length"
+			],
+			[
+				"cre",
+				"createFFT"
+			],
+			[
+				"tau",
+				"taumax"
+			],
+			[
+				"ma",
+				"map"
+			],
+			[
+				"cons",
+				"consts"
+			],
+			[
+				"gen",
+				"genAll"
+			],
+			[
+				"u",
+				"unit"
+			],
+			[
+				"arr",
+				"arrLength"
+			],
+			[
+				"accele",
+				"accelerate-fft"
+			],
+			[
+				"po",
+				"points"
+			],
+			[
+				"exp",
+				"expPeriod"
+			],
+			[
+				"fr",
+				"fromList"
+			],
+			[
+				"from",
+				"fromVectors"
+			],
+			[
+				"leng",
+				"lenghth"
+			],
+			[
+				"parse",
+				"parseArgs"
+			],
+			[
+				"enum",
+				"enumFromThen"
+			],
+			[
+				"gro",
+				"groupElems"
+			],
+			[
+				"doe",
+				"doesEnrageMork"
+			],
+			[
+				"sto",
+				"stompOrStab"
+			],
+			[
+				"dor",
+				"doesEnrageGork"
+			],
+			[
+				"sum",
+				"sumOfnum"
+			],
+			[
+				"q",
+				"qualified"
+			],
+			[
+				"im",
+				"import\tkeyword"
+			],
+			[
+				"qu",
+				"qualified"
+			],
+			[
+				"c",
+				"c"
+			],
+			[
+				"Cen",
+				"Center_of_light"
+			],
+			[
+				"toM",
+				"toMatrixS"
+			],
+			[
+				"dr",
+				"drop"
+			],
+			[
+				"frames",
+				"frames"
+			],
+			[
+				"U",
+				"UNPACK"
+			],
+			[
+				"in",
+				"in\tkeyword"
+			],
+			[
+				"all",
+				"allFrames"
+			],
+			[
+				"drop",
+				"dropFrames"
+			],
+			[
+				"temp",
+				"tempFrames"
+			],
+			[
+				"Mo",
+				"monoid"
+			],
+			[
+				"av",
+				"avPixFmtGray16"
+			],
+			[
+				"Jui",
+				"JuicyPixelFormat"
+			],
+			[
+				"get",
+				"getFrames"
+			],
+			[
+				"Tra",
+				"trace"
+			],
+			[
+				"Flex",
+				"FlexibleInstances"
+			],
+			[
+				"Vect",
+				"Vectorizable"
+			],
+			[
+				"v",
+				"v"
+			],
+			[
+				"putB",
+				"putBoardR"
+			],
+			[
+				"for",
+				"force"
+			],
+			[
+				"next",
+				"nextgen"
+			],
+			[
+				"b",
+				"b"
+			],
+			[
+				"sho",
+				"showCells"
+			],
+			[
+				"hei",
+				"height"
+			],
+			[
+				"bo",
+				"Board2"
+			],
+			[
+				"sh",
+				"showCells"
+			],
+			[
+				"put",
+				"putStr"
+			],
+			[
+				"pu",
+				"putChar"
+			],
+			[
+				"x",
+				"x"
+			],
+			[
+				"z",
+				"z"
+			],
+			[
+				"getC",
+				"getChar"
+			],
+			[
+				"do",
+				"do\tkeyword"
+			],
+			[
+				"digi",
+				"digitToInt"
+			],
+			[
+				"putS",
+				"putStr"
+			],
+			[
+				"pus",
+				"putStrLn"
+			],
+			[
+				"puts",
+				"putStr"
+			],
+			[
+				"imp",
+				"import\tkeyword"
+			],
+			[
+				"sol",
+				"solutions' ∷ [Int] → Int → [Expr]\tGames"
+			],
+			[
+				"appl",
+				"apply ∷ Op → Int → Int → Int\tGames"
+			],
+			[
+				"Eq",
+				"Eqvi"
+			],
+			[
+				"qua",
+				"qualified"
+			],
+			[
+				"F",
+				"Foldable t\tPrelude"
+			],
+			[
+				"take",
+				"takeWhile2"
+			],
+			[
+				"int2",
+				"int2bin ∷ Int → [Int]\tExercises"
+			],
+			[
+				"is",
+				"isLower ∷ Char → Bool\tData.Char"
+			],
+			[
+				"int",
+				"Integer \tPrelude"
+			],
+			[
+				"first",
+				"firstPosFrom"
+			],
+			[
+				"mod",
+				"module"
+			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "stack.yaml",
+			"file": "src/Smoothed.hs",
 			"settings":
 			{
-				"buffer_size": 3831,
+				"buffer_size": 2433,
 				"encoding": "UTF-8",
-				"line_ending": "Unix"
+				"line_ending": "Windows"
 			}
 		},
 		{
-			"contents": "name:                wigner\nversion:             0.1.0.0\n-- synopsis:\n-- description:\nhomepage:            https://github.com/githubuser/wigner#readme\nlicense:             BSD3\nlicense-file:        LICENSE\nauthor:              Rinat Stryungis\nmaintainer:          lazybonesxp@gmail.com\ncopyright:           2017 Rinat Stryungis\ncategory:            \nbuild-type:          Simple\nextra-source-files:  README.md\ncabal-version:       >=1.10\n\nlibrary\n  hs-source-dirs:      src\n  exposed-modules:     Wigner, RwData, Hilbert\n  build-depends:       base >= 4.7 && < 5 , accelerate, accelerate-io , text , vector, accelerate-fft, matrix, accelerate-llvm-native\n  default-language:    Haskell2010\n\nexecutable wigner-exe\n  hs-source-dirs:      app\n  main-is:             Main.hs\n  ghc-options:         -O3 -threaded -rtsopts\n  build-depends:       base\n                     , wigner , accelerate, vector, accelerate-io, double-conversion, text, accelerate-llvm-native\n  default-language:    Haskell2010\n\ntest-suite wigner-test\n  type:                exitcode-stdio-1.0\n  hs-source-dirs:      test\n  main-is:             Spec.hs\n  build-depends:       base\n                     , wigner\n  ghc-options:         -threaded -rtsopts -with-rtsopts=-N\n  default-language:    Haskell2010\n\nsource-repository head\n  type:     git\n  location: https://github.com/githubuser/wigner\n",
-			"file": "wigner.cabal",
-			"file_size": 1363,
-			"file_write_time": 131470178907451559,
+			"file": "src/PseudoWigner.hs",
 			"settings":
 			{
-				"buffer_size": 1360,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/home/suhareva/Rinat/accelerate-fft/accelerate-fft.cabal",
-			"settings":
-			{
-				"buffer_size": 3741,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/home/suhareva/Rinat/accelerate-fft/stack.yaml",
-			"settings":
-			{
-				"buffer_size": 1927,
+				"buffer_size": 4858,
 				"encoding": "UTF-8",
-				"line_ending": "Unix"
+				"line_ending": "Windows"
 			}
 		},
 		{
-			"contents": "module Hilbert where\n\nimport qualified Data.Array.Accelerate as A\nimport Data.Array.Accelerate.Array.Sugar as S \nimport qualified Data.Array.Accelerate.Math.FFT as AMF\nimport qualified Data.Array.Accelerate.Data.Complex as ADC\n\nezero :: A.Exp Double\nezero = A.constant 0\n\neone :: A.Exp Double\neone = A.constant 1 \n\netwo :: A.Exp Double \netwo = A.constant 2\n\nhilbert :: A.Acc (A.Array A.DIM1 Double) -> A.Acc (A.Array A.DIM1 (ADC.Complex Double))\nhilbert arr = \n  let leng = A.length arr \n      hVect = h (A.unit leng)\n  in  inverseFFT (loadArrayFFt arr) hVect\n\n-- | Scalar myltiplies our vector with h vector and make inverse FFT \n\ninverseFFT :: A.Acc (A.Array A.DIM1 (ADC.Complex Double)) -> A.Acc (A.Array A.DIM1 Double) -> A.Acc (A.Array A.DIM1 (ADC.Complex Double))\ninverseFFT arr h = AMF.fft1D' AMF.Inverse (A.Z A.:. 0) $ A.zipWith (A.*) arr (makeComplex h)\n\n-- | Load vector to GPU, make it complex and apply FFT\n\napplyFFt :: A.Acc (A.Array A.DIM1 Double) -> A.Acc (A.Array A.DIM1 (ADC.Complex Double))\napplyFFt arr = AMF.fft1D' AMF.Forward (A.Z A.:. 0) $ makeComplex arr\n\n-- | Form Vector that will be scalar multiplied with our spectre vector.\n\nh :: A.Acc (A.Scalar Int) -> A.Acc (A.Array A.DIM1 Double)\nh s = A.generate (A.index1 size) (\\ix -> let Z :. x = A.unlift ix in def (A.fromIntegral x))\n  where \n    size = A.the s \n    dsize = A.fromIntegral size\n    def x = A.ifThenElse (A.even size) (defEven x) (defOdd x)\n    defEven x = A.caseof x [(\\y ->(y A.== ezero) A.|| (y A.== (dsize/etwo)), eone),\n  \t  (\\y -> (x A.<= (dsize/etwo)), etwo)] ezero\n    defOdd x = A.caseof x [((\\y -> (y A.== ezero)), eone),\n      (\\y -> (y A.>= ((dsize A.+ eone)/etwo)), eone)] etwo\n\n-- | Make our array complex with zero imaginary part \n\nmakeComplex :: A.Acc (A.Array A.DIM1 Double) -> A.Acc (A.Array A.DIM1 (ADC.Complex Double))\nmakeComplex = A.map ((flip ADC.mkPolar) 0.0)",
 			"file": "src/Hilbert.hs",
-			"file_size": 1917,
-			"file_write_time": 131471094981835450,
 			"settings":
 			{
-				"buffer_size": 1870,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
+				"buffer_size": 2291,
+				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/Wigner.hs",
+			"file": "src/ParseArgs.hs",
 			"settings":
 			{
-				"buffer_size": 7350,
+				"buffer_size": 2702,
 				"encoding": "UTF-8",
-				"line_ending": "Unix"
+				"line_ending": "Windows"
 			}
 		},
 		{
 			"file": "app/Main.hs",
 			"settings":
 			{
-				"buffer_size": 1565,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
+				"buffer_size": 4644,
+				"line_ending": "Windows"
 			}
 		}
 	],
-	"build_system": "Packages/User/haskell-stack.sublime-build",
+	"build_system": "Packages/User/Mytest.sublime-build",
 	"build_system_choices":
 	[
 		[
 			[
 				[
-					"Packages/User/haskell-stack.sublime-build",
+					"Packages/User/Mytest.sublime-build",
 					""
 				],
 				[
-					"Packages/User/haskell-stack.sublime-build",
+					"Packages/User/Mytest.sublime-build",
 					"exec"
 				]
 			],
 			[
-				"Packages/User/haskell-stack.sublime-build",
+				"Packages/User/Mytest.sublime-build",
 				""
 			]
 		]
@@ -98,23 +458,29 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 372.0,
-		"last_filter": "Package Control: ",
+		"height": 200.0,
+		"last_filter": "hsd",
 		"selected_items":
 		[
+			[
+				"hsd",
+				"Preferences: SublimeHaskell Settings – Default"
+			],
 			[
 				"Package Control: ",
 				"Package Control: Install Package"
 			]
 		],
-		"width": 401.0
+		"width": 1080.0
 	},
 	"console":
 	{
-		"height": 146.0,
+		"height": 342.0,
 		"history":
 		[
-			"import urllib.request,os,hashlib; h = 'df21e130d211cfc94d9b0905775a7c0f' + '1e3d39e33b79698005270310898eea76'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) "
+			"stack build;",
+			"stack build",
+			"import urllib.request,os,hashlib; h = 'df21e130d211cfc94d9b0905775a7c0f' + '1e3d39e33b79698005270310898eea76'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
 		]
 	},
 	"distraction_free":
@@ -128,17 +494,88 @@
 	},
 	"expanded_folders":
 	[
-		"/home/suhareva/Rinat/wigner-ville-accelerate",
-		"/home/suhareva/Rinat/wigner-ville-accelerate/app",
-		"/home/suhareva/Rinat/wigner-ville-accelerate/src"
+		"/root/wigner-ville-accelerate",
+		"/root/wigner-ville-accelerate/app",
+		"/root/wigner-ville-accelerate/src"
 	],
 	"file_history":
 	[
-		"/home/suhareva/.config/sublime-text-3/Packages/User/haskell-stack.sublime-build"
+		"/root/haskell-projects/wigner/wigner.cabal",
+		"/root/haskell-projects/wigner/stack.yaml",
+		"/root/haskell-projects/wigner/src/Wigner.hs",
+		"/root/haskell-projects/wigner/accelerate-fft/Data/Array/Accelerate/Math/FFT/Mode.hs",
+		"/root/haskell-projects/wigner/accelerate-fft/Data/Array/Accelerate/Math/FFT/LLVM/Native.hs",
+		"/root/haskell-projects/wigner/accelerate-fft/Data/Array/Accelerate/Math/FFT/LLVM/PTX.hs",
+		"/root/haskell-projects/wigner/accelerate-fft/Data/Array/Accelerate/Math/FFT.hs",
+		"/root/hperf/src/Parse_args.hs",
+		"/root/haskell-projects/wigner/src/RwData.hs",
+		"/root/haskell-projects/wigner/src/PseudoWigner.hs",
+		"/root/haskell-projects/wigner/app/Main.hs",
+		"/root/haskell-projects/wigner/src/Hilbert.hs",
+		"/root/haskell-projects/wigner/src/wigner2.hs",
+		"/root/haskell-projects/wigner/wigner.sublime-project",
+		"/root/haskell-projects/wigner/.stack-work/logs/accelerate-fft-1.0.0.0.log",
+		"/root/haskell-projects/wigner/wigner2.hs",
+		"/C/1/tfrpwv.m",
+		"/C/1/tfrspwv.m",
+		"/C/Users/lazyb/Documents/haskell-projects/ForUdgin/app/Main.hs",
+		"/C/Users/lazyb/Downloads/wigner_ville_spectrum_example.py",
+		"/root/haskell-projects/wigner/src/rwdata.hs",
+		"/C/Users/lazyb/Documents/haskell-projects/ForUdgin/stack.yaml",
+		"/root/haskell-projects/wigner/src/wigner.hs",
+		"/C/Users/lazyb/1.hs",
+		"/C/Users/lazyb/Documents/haskell-projects/wigner/wigner/wigner2.hs",
+		"/C/Users/lazyb/Documents/haskell-projects/wigner/wigner/wigner.cabal",
+		"/C/Users/lazyb/Documents/haskell-projects/wigner/wigner/src/WW.txt",
+		"/C/Users/lazyb/Documents/haskell-projects/wigner/wigner/app/Main.hs",
+		"/C/Users/lazyb/Documents/haskell-projects/ForUdgin/ProcessVideoSeries.cabal",
+		"/C/Users/lazyb/Documents/haskell-projects/ForUdgin/.stack-work/install/63bf7b30/doc/ProcessVideoSeries-0.1.0.0/ProcessSeries.html",
+		"/C/Users/lazyb/Documents/haskell-projects/wigner/wigner/src/rwdata.hs",
+		"/C/Users/lazyb/Documents/haskell-projects/wigner/wigner/stack.yaml",
+		"/C/Users/lazyb/Documents/haskell-projects/ForUdgin/src/ProcessSeries.hs",
+		"/C/Users/lazyb/Downloads/libffi-3.2.1/x86_64-w64-mingw32/include/Makefile",
+		"/C/Users/lazyb/Downloads/libffi-3.2.1/Makefile",
+		"/C/Users/lazyb/Downloads/libffi-3.2.1/x86_64-w64-mingw32/man/Makefile",
+		"/C/Users/lazyb/Downloads/libffi-3.2.1/x86_64-w64-mingw32/testsuite/Makefile",
+		"/C/Users/lazyb/Downloads/libffi-3.2.1/x86_64-w64-mingw32/Makefile",
+		"/C/Users/lazyb/Desktop/practical_task.m",
+		"/C/Users/lazyb/Documents/haskell-projects/ForUdgin/src/processSeries.hs",
+		"/C/Users/lazyb/Documents/haskell-projects/ForUdgin/.stack-work/installed-cache.bin",
+		"/C/Users/lazyb/Documents/haskell-projects/myfirst/myfirst/src/MySecondfunc.hs",
+		"/C/Users/lazyb/Documents/haskell-projects/myfirst/myfirst/src/MythirdFunk.hs",
+		"/C/Users/lazyb/Documents/haskell-projects/myfirst/myfirst/src/Graham/Tictac.hs",
+		"/C/Users/lazyb/Documents/haskell-projects/myfirst/myfirst/myfirst.cabal",
+		"/C/Users/lazyb/Documents/haskell-projects/ForUdgin/ForUdgin.cabal",
+		"/C/Users/lazyb/Documents/haskell-projects/ForUdgin/Setup.hs",
+		"/C/Users/lazyb/Downloads/ffmpeg-light-master/src/Codec/FFmpeg/Juicy.hs",
+		"/C/Users/lazyb/Documents/haskell-projects/myfirst/myfirst/stack.yaml",
+		"/C/Users/lazyb/Downloads/ffmpeg-light-master (1).zip",
+		"/C/Users/lazyb/Documents/haskell-projects/myfirst/myfirst/project11.sublime-project",
+		"/C/Users/lazyb/Documents/haskell-projects/myfirst/myfirst/src/Myfirstfunc.hs",
+		"/C/Users/lazyb/Documents/haskell-projects/ForUdgin/src/Lib.hs",
+		"/C/Users/lazyb/Documents/haskell-projects/ForUdgin/libavcodec.pc",
+		"/C/Users/lazyb/Documents/haskell-projects/ForUdgin/libavdevice.pc",
+		"/C/Users/lazyb/Documents/haskell-projects/ForUdgin/libavformat.pc",
+		"/C/Users/lazyb/Documents/haskell-projects/ForUdgin/libavutil.pc",
+		"/C/Users/lazyb/Documents/haskell-projects/ForUdgin/libswscale.pc",
+		"/C/Users/lazyb/Documents/haskell-projects/myfirst/myfirst/src/Graham/Hello.hs",
+		"/C/Users/lazyb/Documents/haskell-projects/ForUdgin/LICENSE",
+		"/C/Users/lazyb/Documents/haskell-projects/ForUdgin/README.md",
+		"/C/Users/lazyb/Documents/haskell-projects/myfirst/myfirst/src/Graham/Exercises.hs",
+		"/C/Users/lazyb/Documents/haskell-projects/myfirst/myfirst/src/Graham/Exercises2.hs",
+		"/C/Users/lazyb/Documents/haskell-projects/myfirst/myfirst/src/Graham/games.hs",
+		"/C/Users/lazyb/Documents/haskell-projects/myfirst/myfirst/src/Graham/tictac.hs",
+		"/C/Users/lazyb/Documents/haskell-projects/newtest/Setup.hs",
+		"/C/Users/lazyb/Documents/haskell-projects/newtest/src/Lib.hs",
+		"/C/Users/lazyb/AppData/Roaming/Sublime Text 3/Packages/User/Mytest.sublime-build",
+		"/C/Users/lazyb/Documents/haskell-projects/myfirst/myfirst/src/Lazy.hs",
+		"/C/Users/lazyb/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+		"/C/Users/lazyb/AppData/Roaming/Sublime Text 3/Packages/Default/Preferences.sublime-settings",
+		"/C/Users/lazyb/AppData/Roaming/Sublime Text 3/Packages/SublimeHaskell/Settings/SublimeHaskell.sublime-settings"
 	],
 	"find":
 	{
-		"height": 0.0
+		"height": 34.0
 	},
 	"find_in_files":
 	{
@@ -152,6 +589,93 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"subAVG",
+			"liftAtoC",
+			"shapeToList ",
+			"h",
+			"generate",
+			"ALI",
+			"prsE",
+			"hadd",
+			"\"",
+			"ceiling",
+			"step",
+			"ceiling",
+			"step",
+			"==",
+			"scals !! 3",
+			"scals !! 2",
+			"scals !! 4",
+			"scals !! 1",
+			"undefined",
+			"ivectors",
+			"A.unit",
+			"link",
+			"ld.exe",
+			"accLength",
+			"Int",
+			"read",
+			"procee",
+			"length",
+			"para",
+			"parall",
+			"process ",
+			" IO",
+			"IO",
+			"ШЩ",
+			"createS",
+			"S.singleton",
+			"S.empty",
+			"S.drop",
+			"S.lookup 0",
+			"S.Seq",
+			"U.",
+			"S.Seq",
+			"processFrames",
+			"U.",
+			"pT",
+			"U.",
+			"C.",
+			"V.",
+			"Pixel8",
+			"V.",
+			"Double",
+			"JuicyPixelFormat",
+			"PixelRGBA8",
+			"AVPixel",
+			"Integer",
+			"100",
+			"move g",
+			"chop",
+			"diag2",
+			"goto",
+			"Tree",
+			"isFull",
+			"fold",
+			"foldr",
+			"show",
+			"gameTr",
+			"depth",
+			"show",
+			"let",
+			"wins",
+			"depth",
+			"wins",
+			"eratos",
+			"erat",
+			"eratos",
+			"Num ",
+			"Num",
+			"!!",
+			"deeps",
+			"seq",
+			"putboard",
+			"putStr",
+			"putstr",
+			"map",
+			"rmd",
+			"isLo",
+			"hdevtoo"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -159,6 +683,8 @@
 		"regex": false,
 		"replace_history":
 		[
+			"supAVG",
+			"floor"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -169,150 +695,30 @@
 	"folders":
 	[
 		{
-			"path": "/home/suhareva/Rinat/wigner-ville-accelerate"
+			"path": "/root/wigner-ville-accelerate"
 		}
 	],
 	"groups":
 	[
 		{
-			"selected": 4,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "stack.yaml",
+					"file": "src/Smoothed.hs",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3831,
+						"buffer_size": 2433,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2350,
-								2350
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/YAML/YAML.sublime-syntax",
-							"tab_size": 3,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "wigner.cabal",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1360,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								993,
-								993
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/SublimeHaskell/Syntaxes/Cabal.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "/home/suhareva/Rinat/accelerate-fft/accelerate-fft.cabal",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3741,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1066,
-								1066
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/SublimeHaskell/Syntaxes/Cabal.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "/home/suhareva/Rinat/accelerate-fft/stack.yaml",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1927,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								372,
-								372
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/YAML/YAML.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "src/Hilbert.hs",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1870,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								863,
-								863
+								1248,
+								1248
 							]
 						],
 						"settings":
@@ -322,27 +728,27 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 342.0,
+						"translation.y": 628.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 5,
-					"file": "src/Wigner.hs",
+					"buffer": 1,
+					"file": "src/PseudoWigner.hs",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 7350,
+						"buffer_size": 4858,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								344,
-								344
+								1184,
+								1184
 							]
 						],
 						"settings":
@@ -352,27 +758,87 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 358.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
+					"buffer": 2,
+					"file": "src/Hilbert.hs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2291,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								749,
+								749
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/SublimeHaskell/Syntaxes/Haskell-SublimeHaskell.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 540.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/ParseArgs.hs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2702,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2582,
+								2582
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/SublimeHaskell/Syntaxes/Haskell-SublimeHaskell.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1528.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
 					"file": "app/Main.hs",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1565,
+						"buffer_size": 4644,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								969,
-								969
+								2547,
+								2547
 							]
 						],
 						"settings":
@@ -382,10 +848,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 228.0,
+						"translation.y": 1348.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 3,
 					"type": "text"
 				}
 			]
@@ -393,11 +859,11 @@
 	],
 	"incremental_find":
 	{
-		"height": 0.0
+		"height": 52.0
 	},
 	"input":
 	{
-		"height": 0.0
+		"height": 74.0
 	},
 	"layout":
 	{
@@ -424,17 +890,9 @@
 	"menu_visible": true,
 	"output.exec":
 	{
-		"height": 273.0
+		"height": 227.0
 	},
 	"output.find_results":
-	{
-		"height": 0.0
-	},
-	"output.sublime_haskell_error_panel":
-	{
-		"height": 118.0
-	},
-	"output.sublime_haskell_output_panel":
 	{
 		"height": 0.0
 	},
@@ -442,7 +900,7 @@
 	"project": "",
 	"replace":
 	{
-		"height": 0.0
+		"height": 62.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -480,7 +938,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 312.0,
+	"side_bar_width": 244.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{
