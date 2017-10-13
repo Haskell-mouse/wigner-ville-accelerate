@@ -1,12 +1,6 @@
-{-# LANGUAGE BangPatterns #-}
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE FlexibleContexts#-}
-{-# LANGUAGE ConstraintKinds #-}
-{-# LANGUAGE EmptyDataDecls #-}
 
-module Hilbert where
+module Hilbert(hilbert, makeComplex) where
 
 import qualified Data.Array.Accelerate as A
 import Data.Array.Accelerate.Array.Sugar as S 

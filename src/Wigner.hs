@@ -1,29 +1,15 @@
-{-# LANGUAGE BangPatterns #-}
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE FlexibleContexts#-}
-{-# LANGUAGE ConstraintKinds #-}
-{-# LANGUAGE EmptyDataDecls #-}
 
-module Wigner where
+module Wigner(wignerVille) where
 
---import RwData
 import Hilbert
 import qualified Data.Array.Accelerate as A
 import Data.Array.Accelerate.Array.Sugar as S 
-import qualified Data.Array.Accelerate.Data.Fold as AF
-import qualified Data.Array.Accelerate.Data.Monoid as AM
-import qualified Data.Array.Accelerate.Interpreter as ALI
-import qualified Data.Array.Accelerate.LLVM.Native as ALN
-import qualified Data.Array.Accelerate.LLVM.PTX as ALP
 import qualified Data.Array.Accelerate.Math.FFT as AMF
 import qualified Data.Array.Accelerate.Data.Complex as ADC
-import qualified Data.Vector.Storable as VS
-import qualified Data.Array.Accelerate.IO as AI
-import qualified Data.Vector as V 
 
-
+-- | Wigner-ville distribution. It takes 1D array of complex floating numbers and returns 2D array of real numbers. 
+-- | Columns represents time and rows - frequency. Frequency range is from 0 to n/4, where n is a sampling frequency frequancy 
 
 wignerVille :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e) => A.Acc (A.Array A.DIM1 (ADC.Complex e)) -> A.Acc (A.Array A.DIM2 e)
 wignerVille arr = 

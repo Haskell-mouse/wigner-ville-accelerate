@@ -16,7 +16,7 @@ cabal-version:       >=1.10
 library
   hs-source-dirs:      src
   exposed-modules:     Wigner, ParseArgs, Hilbert, PseudoWigner, Smoothed, ParseFile
-  build-depends:       base >= 4.7 && < 5 ,optparse-applicative , attoparsec, accelerate, accelerate-io , text , vector, accelerate-fft, matrix, accelerate-llvm-native, accelerate-llvm-ptx
+  build-depends:       base >= 4.7 && < 5 , math-functions,optparse-applicative , attoparsec, accelerate, accelerate-io , text , vector, accelerate-fft, matrix, accelerate-llvm-native, accelerate-llvm-ptx
   default-language:    Haskell2010
 
 executable wigner-exe
@@ -24,7 +24,7 @@ executable wigner-exe
   main-is:             Main.hs
   ghc-options:         -O2 -threaded -rtsopts -eventlog
   build-depends:       base
-                     , wigner , split, parallel , directory, attoparsec, text-show, array, accelerate, vector, accelerate-io, double-conversion, text, accelerate-llvm-native, accelerate-llvm-ptx
+                     , wigner , split, vector-split ,deepseq , parallel , directory, attoparsec, text-show, array, accelerate, vector, accelerate-io, double-conversion, text, accelerate-llvm-native, accelerate-llvm-ptx
   default-language:    Haskell2010
 
 test-suite wigner-test

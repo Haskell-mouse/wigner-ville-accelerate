@@ -9,6 +9,8 @@ import PseudoWigner
 import Data.Text as T
 import Options.Applicative as O
 import Data.Semigroup ((<>))
+import Data.Data
+import Data.Typeable
 default (T.Text)
 
 data WVMode = WV | PWV | SPWV 
@@ -102,3 +104,8 @@ no_subtract_avg = switch
    <> short 'N'
    <> help "If enabled, then dont subtract average value from all elemets of array before Hilbert transform."
   )
+
+{-
+  func_compl :: [String]
+  func_compl = 
+    let a = Rect -}

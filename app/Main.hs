@@ -20,8 +20,10 @@ import qualified Data.Array.Accelerate.LLVM.Native as ALN
 import qualified Data.Array.Accelerate.LLVM.PTX as ALP
 import Data.Array.Accelerate.Array.Sugar as S 
 import System.Environment
+import qualified Data.Vector.Split as DS
 import Data.Monoid
 import Debug.Trace 
+import Control.DeepSeq
 import System.IO
 import GHC.Float
 import Data.List
@@ -54,7 +56,24 @@ writeString file (x:xs) w n = do
   then do 
     TI.hPutStr file "\n"
     writeString file xs w (n + 1)
-  else writeString file xs w (n + 1)
+  else writeString file xs w (n + 1)  
+
+{-writeString :: Handle -> [Double] -> Int -> Int -> IO ()
+writeString file xs w n = do 
+  let txt = CP.withStrategy (CP.parListChunk 4000 CP.rdeepseq) $  map (\y -> DT.toPrecision 5 y <> " ") xs
+  writeToFile file txt w n
+  
+{-# INLINE writeToFile #-}
+writeToFile :: Handle -> [T.Text] -> Int -> Int -> IO ()
+writeToFile _ [] _ _  = return ()
+writeToFile file (x:xs) w n = do 
+  TI.hPutStrLn file x
+  if (n `mod` w) == 0 
+  then do 
+    TI.hPutStr file "\n"
+    writeToFile file xs w (n + 1)
+  else writeToFile file xs w (n + 1) -}
+
 
 makePWVall :: Opts -> IO ()
 makePWVall (OptsPWV path dev wlen wfun nosAVGflag) = do
@@ -86,7 +105,7 @@ startPWV dev window oldName sAVGflag (file,dataF) = do
       processed = case dev of 
                     CPU -> ALN.run1 (((curry pWignerVille) window) . hilbert . supAVG sAVGflag) pData
                     GPU -> ALP.run1 (((curry pWignerVille) window) . hilbert . supAVG sAVGflag) pData
-      pList = S.toList processed
+      pList = S.toList $ processed
   file <- openFile newFName WriteMode
   writeString file pList leng 1
   hClose file
@@ -119,7 +138,7 @@ startWV dev oldName sAVGflag (file,dataF) = do
       processed = case dev of 
                     CPU -> ALN.run1 (wignerVille . hilbert . supAVG sAVGflag) pData
                     GPU -> ALP.run1 (wignerVille . hilbert . supAVG sAVGflag) pData
-      pList = S.toList processed
+      pList = S.toList $  processed
   file <- openFile newFName WriteMode
   writeString file pList leng 1
   hClose file

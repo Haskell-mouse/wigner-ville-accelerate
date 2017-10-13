@@ -1,41 +1,33 @@
-{-# LANGUAGE BangPatterns #-}
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE FlexibleContexts#-}
-{-# LANGUAGE ConstraintKinds #-}
-{-# LANGUAGE EmptyDataDecls #-}
+{-# LANGUAGE DeriveDataTypeable #-}
 
-module PseudoWigner(WindowFunc(..), makeWindow, pWignerVille) where
+module PseudoWigner where
 
 import Hilbert
 import qualified Data.Array.Accelerate as A
 import Data.Array.Accelerate.Array.Sugar as S 
-import qualified Data.Array.Accelerate.Data.Fold as AF
-import qualified Data.Array.Accelerate.Data.Monoid as AM
-import qualified Data.Array.Accelerate.Interpreter as ALI
-import qualified Data.Array.Accelerate.LLVM.Native as ALN
-import qualified Data.Array.Accelerate.LLVM.PTX as ALP
+--import qualified Data.Array.Accelerate.Data.Monoid as AM
 import qualified Data.Array.Accelerate.Math.FFT as AMF
 import qualified Data.Array.Accelerate.Data.Complex as ADC
-import qualified Data.Vector.Storable as VS
-import qualified Data.Array.Accelerate.IO as AI
-import qualified Data.Vector as V 
-import Debug.Trace
+import Data.Data
+import Data.Typeable
 
-data WindowFunc = Rect | Sin | Lanczos | Hanning | Hamming
-  deriving (Read, Show)
 
-makeWindow :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e) => 
+data WindowFunc = Rect | Sin | Lanczos | Hanning | Hamming | Bartlett 
+  deriving (Read, Show, Data, Typeable)
+ 
+makeWindow :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Ord e) => 
   WindowFunc -> A.Acc (Scalar Int) -> A.Acc (A.Array A.DIM1 e)
 makeWindow func leng = 
-  case func of 
-    Rect -> A.fill (A.index1 $ A.the leng) 1.0
-    Sin  -> A.generate (A.index1 $ A.the leng) (\sh -> let (A.Z A.:.x) = A.unlift sh in sin (pi*(A.fromIntegral x)/(A.fromIntegral $ A.the leng - 1)))
-    Lanczos -> A.generate (A.index1 $ A.the leng) (\sh -> let (A.Z A.:.x) = A.unlift sh in sinc ((2*(A.fromIntegral x)/(A.fromIntegral $ A.the leng - 1)) - 1.0)) 
-    Hanning -> A.generate (A.index1 $ A.the leng) (\sh -> let (A.Z A.:.x) = A.unlift sh in 0.5 - (0.5 * (cos (2*pi*(A.fromIntegral (x + 1))/(A.fromIntegral $ A.the leng + 1)))))
-    Hamming -> A.generate (A.index1 $ A.the leng) (\sh -> let (A.Z A.:.x) = A.unlift sh in 0.54 - (0.46 * (cos (2*pi*(A.fromIntegral (x + 1))/(A.fromIntegral $ A.the leng + 1)))))
-
+  let gen = A.generate (A.index1 $ A.the leng)
+  in case func of 
+       Rect -> A.fill (A.index1 $ A.the leng) 1.0
+       Sin  -> gen (\sh -> let (A.Z A.:.x) = A.unlift sh in sin (pi*(A.fromIntegral x)/(A.fromIntegral $ A.the leng - 1)))
+       Lanczos -> gen (\sh -> let (A.Z A.:.x) = A.unlift sh in sinc ((2*(A.fromIntegral x)/(A.fromIntegral $ A.the leng - 1)) - 1.0)) 
+       Hanning -> gen (\sh -> let (A.Z A.:.x) = A.unlift sh in 0.5 - (0.5 * (cos (2*pi*(A.fromIntegral (x + 1))/(A.fromIntegral $ A.the leng + 1)))))
+       Hamming -> gen (\sh -> let (A.Z A.:.x) = A.unlift sh in 0.54 - (0.46 * (cos (2*pi*(A.fromIntegral (x + 1))/(A.fromIntegral $ A.the leng + 1)))))
+       Bartlett -> gen (\sh -> let (A.Z A.:.x) = A.unlift sh in 1.0 - A.abs (((A.fromIntegral x)/(A.fromIntegral (A.the leng - 1)/2.0)) - 1.0))
+ 
 pWignerVille :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e) => 
   (A.Acc (A.Array A.DIM1 e), A.Acc (A.Array A.DIM1 (ADC.Complex e))) -> A.Acc (A.Array A.DIM2 e)
 pWignerVille (window, arr) = 
@@ -77,7 +69,7 @@ generateValue arr time tau h = (makeComplex h) * (arr A.!! (time + tau)) * (ADC.
 
 createMatrix :: (A.RealFloat e, Elt e) => 
   A.Acc (A.Array A.DIM1 (ADC.Complex e)) -> A.Acc (A.Array A.DIM1 e) -> A.Acc (A.Array A.DIM1 Int) -> A.Acc (A.Array A.DIM1 Int) -> A.Acc (A.Array A.DIM2 (ADC.Complex e)) 
-createMatrix arr window taumaxs lims = A.transpose $ A.backpermute (A.index2 leng leng) (moveUp taumaxs leng) raw 
+createMatrix arr window taumaxs lims = A.backpermute (A.index2 leng leng) (moveUp taumaxs leng) raw 
   where
     raw = A.generate (A.index2 leng leng) (\sh -> let (A.Z A.:.x A.:. t) = A.unlift sh
                                                       lim = lims A.!! t
@@ -88,13 +80,27 @@ createMatrix arr window taumaxs lims = A.transpose $ A.backpermute (A.index2 len
     lh = (A.length window - 1) `div` 2 
     gen x t lim taum h = A.cond (x A.< lim) (generateValue arr t (x - taum) h) 0
 
-epsilon :: RealFloat a => a
-epsilon = encodeFloat 1 (fromIntegral $ 1-floatDigits epsilon)
-
-sinc :: (A.RealFloat a) => A.Exp a -> A.Exp  a
-sinc x =
-   if abs x >= taylor_n_bound
-     then sin x / x
-     else 1 - x^2/6 + x^4/120
- where
-  taylor_n_bound = sqrt $ sqrt epsilon
+sinc :: (Floating (A.Exp e), Elt e, A.Ord e) => A.Exp e -> A.Exp e
+sinc x = 
+  A.cond (ax A.< eps_0) 1 (A.cond (ax A.< eps_2) (1 - x2/6) (A.cond (ax A.< eps_4) (1 - x2/6 + x2*x2/120) ((A.sin x)/x)))
+  where 
+    ax = A.abs x
+    x2 = x*x
+    eps_0 = 1.8250120749944284e-8 -- sqrt (6ε/4)
+    eps_2 = 1.4284346431400855e-4 --   (30ε)**(1/4) / 2
+    eps_4 = 4.043633626430947e-3  -- (1206ε)**(1/6) / 2
+{-
+-- | Compute sinc function @sin(x)\/x@
+sinc :: (Ord e, Floating e) => e -> e
+sinc x
+  | ax < eps_0 = 1
+  | ax < eps_2 = 1 - x2/6
+  | ax < eps_4 = 1 - x2/6 + x2*x2/120
+  | otherwise  = sin x / x
+  where
+    ax    = abs x
+    x2    = x*x
+    -- For explanation of choice see `doc/sinc.hs'
+    eps_0 = 1.8250120749944284e-8 -- sqrt (6ε/4)
+    eps_2 = 1.4284346431400855e-4 --   (30ε)**(1/4) / 2
+    eps_4 = 4.043633626430947e-3  -- (1206ε)**(1/6) / 2 -}
