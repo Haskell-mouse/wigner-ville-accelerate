@@ -24,7 +24,7 @@
 -- restrictions.
 -- Both this flags are enabled by default. 
 
-module Data.Array.Accelerate.Math.PseudoWigner(pWignerVille) where
+module Data.Array.Accelerate.Math.PseudoWigner(module Data.Array.Accelerate.Math.PseudoWigner, pWignerVille) where
 
 import Data.Array.Accelerate.Math.Hilbert
 import Data.Array.Accelerate.Math.WindowFunc
