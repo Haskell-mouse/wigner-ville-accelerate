@@ -7,7 +7,8 @@ Build-type:             Simple
 Synopsis:               Wigner-ville transform using the Accelerate library
 Description:
   Wigner-ville and Pseudo wigner-ville transform algorithm, ispired by "Time-frequency toolbox" 
-  and adapted to use with the Accelerate library.
+  and adapted to use with the Accelerate library. If you want to use accelerated backends,
+  like Native or PTX, build accelerate-fft package with corresponding flags.  
 
 license:             BSD3
 license-file:        LICENSE
@@ -27,9 +28,13 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Wigner, Hilbert, WindowFunc
-  other-modules:       Wigner', PseudoWigner
-  build-depends:       base >= 4.7 && < 5 , accelerate, accelerate-fft
+  exposed-modules:     Data.Array.Accelerate.Math.Wigner, Data.Array.Accelerate.Math.Hilbert, 
+                       Data.Array.Accelerate.Math.WindowFunc
+  other-modules:       Data.Array.Accelerate.Math.Wigner', 
+                       Data.Array.Accelerate.Math.PseudoWigner
+  build-depends:       base >= 4.7 && < 5 ,
+                       accelerate >= 1.0.0.0 , 
+                       accelerate-fft >= 1.1.0.0
   default-language:    Haskell2010
 
 test-suite wigner-test
@@ -43,4 +48,4 @@ test-suite wigner-test
 
 source-repository head
   type:     git
-  location: https://github.com/githubuser/wigner
+  location: https://github.com/Haskell-mouse/wigner-ville-accelerate

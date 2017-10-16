@@ -1,0 +1,48 @@
+resolver: lts-9.6
+
+packages:
+- '.'
+
+- location: 
+    git: https://github.com/Haskell-mouse/accelerate-fft.git
+    commit: 2ad986d7d9bc56518c60e64490729cd48ccf81df
+  extra-dep: true
+
+- location:
+    git:    https://github.com/AccelerateHS/accelerate.git
+    commit: 1daff6959b6ec30cf1e13a087d576e3b2403585b
+  extra-dep: true
+
+- location:
+    git:    https://github.com/AccelerateHS/accelerate-llvm.git
+    commit: 979fb8029a33009847d119157f90abefb027a24b
+  extra-dep: true
+  subdirs:
+    - 'accelerate-llvm'
+    - 'accelerate-llvm-native'
+    - 'accelerate-llvm-ptx'
+
+- location:
+    git:    https://github.com/tmcdonell/cuda.git
+    commit: c39da756025d7a6fd9fb3fd368736ee05ced5df2
+  extra-dep: true
+
+- location:
+    git:    https://github.com/tmcdonell/cufft.git
+    commit: 3b48501f2bb732eae8262454d53b5870bf2ce640
+  extra-dep: true
+
+
+extra-deps: [nvvm-0.8.0.0,accelerate-llvm-ptx-1.1.0.0 ,accelerate-llvm-native-1.1.0.1, llvm-hs-4.2.0,llvm-hs-pure-4.1.0.0]
+
+# Override default flag values for local packages and extra-deps
+flags:
+      accelerate:
+                       unsafe-checks: false
+                       bounds-checks: false
+                       debug: false
+                       internal-checks: false
+
+
+# Extra package databases containing global packages
+extra-package-dbs: []

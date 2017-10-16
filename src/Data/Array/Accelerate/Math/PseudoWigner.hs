@@ -1,15 +1,40 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module PseudoWigner(pWignerVille) where
+-- |
+-- Module      : Data.Array.Accelerate.Math.PseudoWigner
+-- Copyright   : [2017] Rinat Stryungis
+-- License     : BSD3
+--
+-- Maintainer  : Rinat Stryungis <lazybonesxp@gmail.com>
+-- Stability   : experimental
+-- Portability : non-portable (GHC extensions)
+--
+-- Computation of a PsudoWigner transform using the accelerate-fft library.
+--
+-- This module uses the accelerate-fft library. And the base implementation of fft 
+-- uses a naive divide-and-conquer fft implementation
+-- whose absolute performance is appalling. It also requires that you know on
+-- the Haskell side the size of the data being transformed, and that this is
+-- a power-of-two in each dimension.
+--
+-- For performance, compile accelerate-fft against the foreign library bindings (using any
+-- number of '-fllvm-ptx', and '-fllvm-cpu' for the accelerate-llvm-ptx, and
+-- accelerate-llvm-native backends, respectively), which have none of the above
+-- restrictions.
+-- Both this flags are enabled by default. 
 
-import Hilbert
-import WindowFunc
+module Data.Array.Accelerate.Math.PseudoWigner(pWignerVille) where
+
+import Data.Array.Accelerate.Math.Hilbert
+import Data.Array.Accelerate.Math.WindowFunc
 import qualified Data.Array.Accelerate as A
 import Data.Array.Accelerate.Array.Sugar as S 
 import qualified Data.Array.Accelerate.Math.FFT as AMF
 import qualified Data.Array.Accelerate.Data.Complex as ADC
- 
+
+
+
 pWignerVille :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e, sh ~ DIM2) => 
   sh -> A.Acc (A.Array A.DIM1 e) -> A.Acc (A.Array A.DIM1 (ADC.Complex e)) -> A.Acc (A.Array A.DIM2 e)
 pWignerVille sh window arr = 

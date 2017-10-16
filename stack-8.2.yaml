@@ -1,0 +1,26 @@
+
+resolver: nightly-2017-10-12
+
+packages:
+- '.'
+
+- location: 
+    git: https://github.com/Haskell-mouse/accelerate-fft.git
+    commit: 2ad986d7d9bc56518c60e64490729cd48ccf81df
+  extra-dep: true
+
+
+extra-deps: [accelerate-1.1.1.0, cufft-0.8.0.0, accelerate-llvm-1.1.0.0,accelerate-llvm-ptx-1.1.0.0 ,accelerate-llvm-native-1.1.0.1, accelerate-io-1.0.0.0, llvm-hs-4.2.0,llvm-hs-pure-4.1.0.0]
+
+# Override default flag values for local packages and extra-deps
+flags:
+      accelerate:
+                       unsafe-checks: false
+                       bounds-checks: false
+                       debug: false
+                       internal-checks: false
+
+
+# Extra package databases containing global packages
+extra-package-dbs: []
+

@@ -1,9 +1,9 @@
 {-# LANGUAGE FlexibleContexts#-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Wigner'(wignerVille) where
+module Data.Array.Accelerate.Math.Wigner'(wignerVille) where
 
-import Hilbert
+import Data.Array.Accelerate.Math.Hilbert
 import qualified Data.Array.Accelerate as A
 import Data.Array.Accelerate.Array.Sugar as S 
 import qualified Data.Array.Accelerate.Math.FFT as AMF

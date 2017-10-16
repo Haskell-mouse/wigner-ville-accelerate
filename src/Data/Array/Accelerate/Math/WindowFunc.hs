@@ -1,7 +1,7 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE FlexibleContexts #-}
 
-module WindowFunc(WindowFunc,makeWindow) where
+module Data.Array.Accelerate.Math.WindowFunc(WindowFunc,makeWindow) where
 
 import qualified Data.Array.Accelerate as A
 import Data.Data
