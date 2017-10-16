@@ -2,7 +2,7 @@
 {-# LANGUAGE TypeFamilies #-}
 
 -- |
--- Module      : Data.Array.Accelerate.Math.Hylbert
+-- Module      : Data.Array.Accelerate.Math.Hilbert
 -- Copyright   : [2017] Rinat Stryungis
 -- License     : BSD3
 --
@@ -32,7 +32,7 @@ import Data.Array.Accelerate.Array.Sugar as S
 import qualified Data.Array.Accelerate.Math.FFT as AMF
 import qualified Data.Array.Accelerate.Data.Complex as ADC
 
--- | hylbert transform. It removes a negative frequencies from the signal. 
+-- | hilbert transform. It removes a negative frequencies from the signal. 
 -- The default implementation requires the array dimension to be a power of two
 -- (else error).
 -- The FFI-backed implementations ignore the Haskell-side size parameter (first
