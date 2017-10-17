@@ -12,7 +12,7 @@ import qualified Data.Array.Accelerate.Data.Complex as ADC
 -- | Wigner-ville distribution. It takes 1D array of complex floating numbers and returns 2D array of real numbers. 
 -- | Columns represents time and rows - frequency. Frequency range is from 0 to n/4, where n is a sampling frequency frequancy 
 
-wignerVille :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e, sh ~ DIM1) => 
+wignerVille :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e, sh ~ DIM2) => 
   sh -> A.Acc (A.Array A.DIM1 (ADC.Complex e)) -> A.Acc (A.Array A.DIM2 e)
 wignerVille sh arr = 
   let times = A.enumFromN (A.index1 leng) 0 :: A.Acc (Array DIM1 Int)
