@@ -35,7 +35,7 @@ import qualified Data.Array.Accelerate.Data.Complex as ADC
 
 
 
-pWignerVille :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e, sh ~ DIM1) => 
+pWignerVille :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e, sh ~ DIM2) => 
   sh -> A.Acc (A.Array A.DIM1 e) -> A.Acc (A.Array A.DIM1 (ADC.Complex e)) -> A.Acc (A.Array A.DIM2 e)
 pWignerVille sh window arr = 
   let times = A.enumFromN (A.index1 leng) 0 :: A.Acc (Array DIM1 Int)
