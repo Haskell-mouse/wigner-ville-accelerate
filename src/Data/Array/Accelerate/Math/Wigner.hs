@@ -1,4 +1,4 @@
-{-# LANGUAGE FlexibleContexts#-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE TypeFamilies #-}
 
 -- |
@@ -33,10 +33,12 @@ import qualified Data.Array.Accelerate.Math.FFT as AMF
 import qualified Data.Array.Accelerate.Data.Complex as ADC
 
 -- | Wigner-ville distribution. It takes 1D array of complex floating numbers and returns 2D array of real numbers. 
--- | Columns represents time and rows - frequency. Frequency range is from 0 to n/4, where n is a sampling frequency frequancy 
+--  Columns of result array represents time and rows - frequency. Frequency range is from 0 to n/4, where n is a sampling frequency.
 
-wignerVille :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e, sh ~ DIM2) => 
-  sh -> A.Acc (A.Array A.DIM1 (ADC.Complex e)) -> A.Acc (A.Array A.DIM2 e)
+wignerVille :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e, sh ~ DIM2)
+  => sh                                      -- ^ Shape of the data array. It is ignored, when compiled with Native or PTX backend.
+  -> A.Acc (A.Array A.DIM1 (ADC.Complex e))  -- ^ Data array
+  -> A.Acc (A.Array A.DIM2 e) 
 wignerVille sh arr = 
   let times = A.enumFromN (A.index1 leng) 0 :: A.Acc (Array DIM1 Int)
       leng = A.length arr 

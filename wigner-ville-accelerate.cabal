@@ -1,5 +1,5 @@
-Name:                   wigner-ville-accelerate
-Version:                0.1.0.1
+Name:                   wigner-ville-accelerate 
+Version:                0.1.0.2
 Cabal-version:          >= 1.6
 Tested-with:            GHC >= 8.0.1
 Build-type:             Simple
