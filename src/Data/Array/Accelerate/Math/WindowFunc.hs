@@ -1,15 +1,33 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE FlexibleContexts #-}
 
-module Data.Array.Accelerate.Math.WindowFunc(WindowFunc(Rect),makeWindow) where
+-- |
+-- Module      : Data.Array.Accelerate.Math.WindowFunc
+-- Copyright   : [2017] Rinat Stryungis
+-- License     : BSD3
+--
+-- Maintainer  : Rinat Stryungis <lazybonesxp@gmail.com>
+-- Stability   : experimental
+-- Portability : non-portable (GHC extensions)
+--
+-- Creation of window for smoothing in frequency-domain in Pseudo-Wigner-Ville distribuition 
+
+module Data.Array.Accelerate.Math.WindowFunc(WindowFunc(..),makeWindow) where
 
 import qualified Data.Array.Accelerate as A
 import Data.Data
 import Data.Typeable
 
+-- | Function of the window. Rect - Rectangle. 
+
 data WindowFunc = Rect | Sin | Lanczos | Hanning | Hamming | Bartlett 
   deriving (Read, Show, Data, Typeable)
- 
+
+-- | Creates new window (1D array of odd length) with length and window function. 
+-- For example 
+--   win1 = makeWindow Sin lentgh
+-- Where length has type Acc (Scalar Int)
+
 makeWindow :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Ord e) => 
   WindowFunc -> A.Acc (A.Scalar Int) -> A.Acc (A.Array A.DIM1 e)
 makeWindow func leng = 

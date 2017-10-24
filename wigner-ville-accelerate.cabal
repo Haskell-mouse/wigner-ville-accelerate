@@ -1,12 +1,12 @@
 Name:                   wigner-ville-accelerate
-Version:                0.1.0.0
+Version:                0.1.0.1
 Cabal-version:          >= 1.6
 Tested-with:            GHC >= 8.0.1
 Build-type:             Simple
 
 Synopsis:               Wigner-ville transform using the Accelerate library
 Description:
-  Wigner-ville and Pseudo wigner-ville transform algorithm, ispired by "Time-frequency toolbox" 
+  Wigner-ville and Pseudo wigner-ville transform algorithm, inspired by "Time-frequency toolbox" 
   and adapted to use with the Accelerate library. If you want to use accelerated backends,
   like Native or PTX, build accelerate-fft package with corresponding flags.  
 
@@ -28,9 +28,9 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Data.Array.Accelerate.Math.Wigner, Data.Array.Accelerate.Math.Hilbert, 
-                       Data.Array.Accelerate.Math.WindowFunc
-  other-modules:       Data.Array.Accelerate.Math.Wigner', 
+  exposed-modules:     Data.Array.Accelerate.Math.Wigner, 
+                       Data.Array.Accelerate.Math.Hilbert, 
+                       Data.Array.Accelerate.Math.WindowFunc,  
                        Data.Array.Accelerate.Math.PseudoWigner
   build-depends:       base >= 4.7 && < 5 ,
                        accelerate >= 1.0.0.0 , 
