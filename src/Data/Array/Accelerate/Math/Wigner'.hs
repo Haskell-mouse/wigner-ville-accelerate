@@ -19,9 +19,6 @@ import Data.Array.Accelerate.Array.Sugar as S
 import qualified Data.Array.Accelerate.Math.FFT as AMF
 import qualified Data.Array.Accelerate.Data.Complex as ADC
 
--- | Wigner-ville distribution. It takes 1D array of complex floating numbers and returns 2D array of real numbers. 
---  Columns of result array represents time and rows - frequency. Frequency range is from 0 to n/4, where n is a sampling frequency.
-
 taumax :: A.Exp Int -> A.Exp Int -> A.Exp Int
 taumax leng t = min (min t (leng - t - 1) ) (A.round (((A.fromIntegral leng)/2.0) - 1.0 :: A.Exp Double))
 

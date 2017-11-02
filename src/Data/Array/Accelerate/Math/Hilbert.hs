@@ -38,24 +38,24 @@ import qualified Data.Array.Accelerate.Data.Complex as ADC
 -- The FFI-backed implementations ignore the Haskell-side size parameter (first
 -- argument).
 
-hilbert :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e, sh ~ DIM1) => 
-  sh -> A.Acc (A.Array A.DIM1 e) -> A.Acc (A.Array A.DIM1 (ADC.Complex e))
-hilbert sh arr = 
+hilbert :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e) => 
+  A.Acc (A.Array A.DIM1 e) -> A.Acc (A.Array A.DIM1 (ADC.Complex e))
+hilbert arr = 
   let leng = A.length arr 
       hVect = h (A.unit leng)
-  in  inverseFFT sh (applyFFt sh arr) hVect
+  in  inverseFFT (applyFFt arr) hVect
 
 -- | Scalar myltiplies our vector with h vector and make inverse FFT 
 
-inverseFFT :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e, sh ~ DIM1) => 
-  sh -> A.Acc (A.Array A.DIM1 (ADC.Complex e)) -> A.Acc (A.Array A.DIM1 e) -> A.Acc (A.Array A.DIM1 (ADC.Complex e))
-inverseFFT sh arr h = AMF.fft AMF.Inverse $ A.zipWith (A.*) arr (A.map makeComplex h)
+inverseFFT :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e) => 
+  A.Acc (A.Array A.DIM1 (ADC.Complex e)) -> A.Acc (A.Array A.DIM1 e) -> A.Acc (A.Array A.DIM1 (ADC.Complex e))
+inverseFFT arr h = AMF.fft AMF.Inverse $ A.zipWith (A.*) arr (A.map makeComplex h)
 
 -- | Load vector to GPU, make it complex and apply FFT
 
-applyFFt :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e, sh ~ DIM1) => 
-  sh -> A.Acc (A.Array A.DIM1 e) -> A.Acc (A.Array A.DIM1 (ADC.Complex e))
-applyFFt sh arr = AMF.fft AMF.Forward $ A.map makeComplex $ arr
+applyFFt :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e) => 
+  A.Acc (A.Array A.DIM1 e) -> A.Acc (A.Array A.DIM1 (ADC.Complex e))
+applyFFt arr = AMF.fft AMF.Forward $ A.map makeComplex $ arr
 
 -- | Form Vector that will be scalar multiplied with our spectre vector.
 
