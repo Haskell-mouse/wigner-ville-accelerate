@@ -24,7 +24,7 @@
 -- restrictions.
 -- Both this flags are enabled by default. 
 
-module Data.Array.Accelerate.Math.PseudoWigner(pWignerVille) where
+module Data.Array.Accelerate.Math.PseudoWigner where
 
 import Data.Array.Accelerate.Math.Hilbert
 import Data.Array.Accelerate.Math.WindowFunc
@@ -32,22 +32,6 @@ import qualified Data.Array.Accelerate as A
 import Data.Array.Accelerate.Array.Sugar as S 
 import qualified Data.Array.Accelerate.Math.FFT as AMF
 import qualified Data.Array.Accelerate.Data.Complex as ADC
-
--- | Pseudo Wigner-ville distribution. 
--- It takes 1D array of complex floating numbers, window and returns 2D array of real numbers. 
--- Columns of result array represents time and rows - frequency. Frequency range is from 0 to n/4, where n is a sampling frequency.
-
-pWignerVille :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e, sh ~ DIM2)
-  => sh                                      -- ^ shape of the data array. It is ignored, when compiled with Native or PTX backend. 
-  -> A.Acc (A.Array A.DIM1 e)                -- ^ Smoothing window. Length of it must be odd.
-  -> A.Acc (A.Array A.DIM1 (ADC.Complex e))  -- ^ Data array
-  -> A.Acc (A.Array A.DIM2 e)
-pWignerVille sh window arr = 
-  let times = A.enumFromN (A.index1 leng) 0 :: A.Acc (Array DIM1 Int)
-      leng = A.length arr
-      taumx = taumaxs times window
-      lims = limits taumx
-  in A.map ADC.real $ A.transpose $ AMF.fft1D_2r' AMF.Forward sh $ createMatrix arr window taumx lims
 
 taumax :: A.Exp Int -> A.Exp Int -> A.Exp Int -> A.Exp Int
 taumax leng lh t = min (min (min t (leng - t - 1) ) (A.round (((A.fromIntegral leng :: A.Exp Double)/2.0) - 1))) lh

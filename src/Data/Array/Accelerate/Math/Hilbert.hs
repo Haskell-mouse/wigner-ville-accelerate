@@ -49,13 +49,13 @@ hilbert sh arr =
 
 inverseFFT :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e, sh ~ DIM1) => 
   sh -> A.Acc (A.Array A.DIM1 (ADC.Complex e)) -> A.Acc (A.Array A.DIM1 e) -> A.Acc (A.Array A.DIM1 (ADC.Complex e))
-inverseFFT sh arr h = AMF.fft1D' AMF.Inverse sh $ A.zipWith (A.*) arr (A.map makeComplex h)
+inverseFFT sh arr h = AMF.fft AMF.Inverse $ A.zipWith (A.*) arr (A.map makeComplex h)
 
 -- | Load vector to GPU, make it complex and apply FFT
 
 applyFFt :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e, sh ~ DIM1) => 
   sh -> A.Acc (A.Array A.DIM1 e) -> A.Acc (A.Array A.DIM1 (ADC.Complex e))
-applyFFt sh arr = AMF.fft1D' AMF.Forward sh $ A.map makeComplex $ arr
+applyFFt sh arr = AMF.fft AMF.Forward $ A.map makeComplex $ arr
 
 -- | Form Vector that will be scalar multiplied with our spectre vector.
 
@@ -69,7 +69,7 @@ h s = A.generate (A.index1 size) (\ix -> let A.Z A.:. x = A.unlift ix in def (A.
     defEven x = 
       A.caseof x [
       (\y ->(y A.== 0) A.|| (y A.== (dsize/2.0)), 1),
-  	  (\y -> (y A.<= (dsize/2.0)), 2)] 0
+      (\y -> (y A.<= (dsize/2.0)), 2)] 0
     defOdd x = A.caseof x [((\y -> (y A.== 0)), 1),
       (\y -> (y A.< ((dsize A.+ 1.0)/2.0)), 2)] 0
 
