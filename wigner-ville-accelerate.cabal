@@ -30,7 +30,8 @@ library
   hs-source-dirs:      src
   exposed-modules:     Data.Array.Accelerate.Math.Wigner, 
                        Data.Array.Accelerate.Math.Hilbert, 
-                       Data.Array.Accelerate.Math.WindowFunc
+                       Data.Array.Accelerate.Math.WindowFunc, 
+                       Data.Array.Accelerate.Math.ChoiWilliams
 
   other-modules:       Data.Array.Accelerate.Math.Wigner'
                        Data.Array.Accelerate.Math.PseudoWigner
