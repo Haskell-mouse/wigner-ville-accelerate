@@ -42,17 +42,6 @@ choiWilliams arr sigma =
       lims = limits taumx
   in A.transpose $ A.map (*2) $ A.map ADC.real $ AMF.fft AMF.Forward $ A.transpose $ sFunc (coreFunction leng sigma) (amatrix arr taumx lims)
 
-test1 :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e)
-  => Acc (Array DIM1 (ADC.Complex e))
-  -> A.Exp e 
-  -> A.Acc (A.Array A.DIM2 (ADC.Complex e))
-test1 arr sigma = 
-  let times = A.enumFromN (A.index1 leng) 0 :: Acc (Array DIM1 Int)
-      leng = A.length arr 
-      taumx = taumaxs times
-      lims = limits taumx
-  in  sFunc (coreFunction leng sigma) (amatrix arr taumx lims)
-
 amatrix :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e)
   => Acc (Array DIM1 (ADC.Complex e))
   -> Acc (Array DIM1 Int)
@@ -70,31 +59,20 @@ coreFunction :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e)
 coreFunction leng sigma =  
   A.generate (A.index3 leng leng leng) (\sh -> 
                 let (A.Z A.:.u A.:. l A.:. n) = A.unlift sh 
-                in genFunc u l n leng sigma)
+                in genCore u l n leng sigma)
 
-coreFunction2 :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e)
-  => Exp Int
-  -> Exp e 
-  -> A.Acc (Array DIM2 e)
-coreFunction2 leng sigma =  
-  A.generate (A.index2 leng leng) (\sh -> 
-                let (A.Z A.:.u A.:. n) = A.unlift sh 
-                in genFunc u 2 n leng sigma)
-
-genFunc :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e) 
+genCore :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e) 
   => Exp Int 
   -> Exp Int 
   -> Exp Int
   -> Exp Int 
   -> Exp e
   -> Exp e
-genFunc n l u leng sigma = 
+genCore n l u leng sigma = 
   let u1 = ((A.fromIntegral u) - h )
       l1 = (A.fromIntegral l) - h
       n1 = cond ((A.fromIntegral n) A.< h) (A.fromIntegral n) (A.fromIntegral (n - leng))
-     -- h = (A.fromIntegral leng)/2.0 
       h = A.fromIntegral (leng `div` 2)
-     -- h1 = A.fromIntegral (leng `div` 2)
   in cond (n1 A.== 0) (cond (u1 A.== l1) 1.0 0.0) ((1.0 / sqrt ((4.0*pi*n1*n1/sigma))) * exp ((-1.0)*(((u1 - l1)*(u1 - l1))/(4.0*n1*n1/sigma)) ) )
 
 sFunc :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e)
