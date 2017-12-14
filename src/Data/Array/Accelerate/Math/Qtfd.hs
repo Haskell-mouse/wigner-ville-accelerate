@@ -77,11 +77,11 @@ choiWilliams arr sigma =
 -- | Choi-Willams with smoothing window in frequency domain
 
 choiWilliams_w :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e)
-  => Acc (Array DIM1 (ADC.Complex e))  -- ^ Data array
+  => Acc (Array DIM1 e)                -- ^ Smoothing window. Length of it must be odd.
+  -> Acc (Array DIM1 (ADC.Complex e))  -- ^ Data array
   -> A.Exp e                           -- ^ sigma
-  -> Acc (Array DIM1 e)                -- ^ Smoothing window. Length of it must be odd.
   -> Acc (Array DIM2 e) 
-choiWilliams_w arr sigma window = 
+choiWilliams_w window sigma arr = 
   let times = A.enumFromN (A.index1 leng) 0 :: Acc (Array DIM1 Int)
       leng = A.length arr 
       taumx = P.taumaxs times window
