@@ -1,6 +1,6 @@
 {-# LANGUAGE FlexibleContexts #-}
 -- |
--- Module      : Data.Array.Accelerate.Math.Wigner
+-- Module      : Data.Array.Accelerate.Math.Qtfd
 -- Copyright   : [2017] Rinat Stryungis
 -- License     : BSD3
 --
@@ -8,7 +8,7 @@
 -- Stability   : experimental
 -- Portability : non-portable (GHC extensions)
 --
--- Computation of Wigner and Pseudo-Wigner transforms using the accelerate-fft library.
+-- Computation of quadratic time-frequency distributions using the accelerate-fft library.
 --
 -- This module uses the accelerate-fft library. And the base implementation of fft 
 -- uses a naive divide-and-conquer fft implementation
@@ -21,10 +21,12 @@
 -- accelerate-llvm-native backends, respectively), which have none of the above
 -- restrictions.
 -- Both of this flags are enabled by default.
-module Data.Array.Accelerate.Math.Wigner where
+
+module Data.Array.Accelerate.Math.Qtfd where
 
 import Data.Array.Accelerate.Math.Wigner'
 import qualified Data.Array.Accelerate.Math.PseudoWigner as P
+import qualified Data.Array.Accelerate.Math.ChoiWilliams as CW
 import Data.Array.Accelerate as A
 import qualified Data.Array.Accelerate.Math.FFT as AMF
 import qualified Data.Array.Accelerate.Data.Complex as ADC
@@ -56,3 +58,32 @@ pWignerVille window arr =
       taumx = P.taumaxs times window
       lims = P.limits taumx
   in A.map ADC.real $ A.transpose $ AMF.fft AMF.Forward $ P.createMatrix arr window taumx lims
+
+-- | Choi-Williams distribution. It takes 1D array of complex floating numbers,  
+-- and returns 2D array of real numbers. 
+-- Columns of result array represents time and rows - frequency. Frequency range is from 0 to n/4, where n is a sampling frequency.
+
+choiWilliams :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e)
+  => Acc (Array DIM1 (ADC.Complex e))  -- ^ Data array
+  -> A.Exp e                           -- ^ sigma
+  -> Acc (Array DIM2 e) 
+choiWilliams arr sigma = 
+  let times = A.enumFromN (A.index1 leng) 0 :: Acc (Array DIM1 Int)
+      leng = A.length arr 
+      taumx = taumaxs times
+      lims = limits taumx
+  in A.transpose $ A.map (*2) $ A.map ADC.real $ AMF.fft AMF.Forward $ A.transpose $ CW.sFunc (CW.coreFunction leng sigma) (CW.amatrix arr taumx lims)
+
+-- | Choi-Willams with smoothing window in frequency domain
+
+choiWilliams_w :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e)
+  => Acc (Array DIM1 (ADC.Complex e))  -- ^ Data array
+  -> A.Exp e                           -- ^ sigma
+  -> Acc (Array DIM1 e)                -- ^ Smoothing window. Length of it must be odd.
+  -> Acc (Array DIM2 e) 
+choiWilliams_w arr sigma window = 
+  let times = A.enumFromN (A.index1 leng) 0 :: Acc (Array DIM1 Int)
+      leng = A.length arr 
+      taumx = P.taumaxs times window
+      lims = P.limits taumx
+  in A.transpose $ A.map (*2) $ A.map ADC.real $ AMF.fft AMF.Forward $ A.transpose $ CW.sFunc (CW.coreFunction leng sigma) (CW.amatrix_w arr taumx lims window)

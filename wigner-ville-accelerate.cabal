@@ -28,13 +28,13 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Data.Array.Accelerate.Math.Wigner, 
+  exposed-modules:     Data.Array.Accelerate.Math.Qtfd, 
                        Data.Array.Accelerate.Math.Hilbert, 
-                       Data.Array.Accelerate.Math.WindowFunc, 
-                       Data.Array.Accelerate.Math.ChoiWilliams
+                       Data.Array.Accelerate.Math.WindowFunc 
 
   other-modules:       Data.Array.Accelerate.Math.Wigner'
-                       Data.Array.Accelerate.Math.PseudoWigner
+                       Data.Array.Accelerate.Math.PseudoWigner,
+                       Data.Array.Accelerate.Math.ChoiWilliams
 
   build-depends:       base >= 4.7 && < 5 ,
                        accelerate >= 1.2.0.0 , 

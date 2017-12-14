@@ -10,7 +10,7 @@
 -- Stability   : experimental
 -- Portability : non-portable (GHC extensions)
 --
--- Computation of a PsudoWigner transform using the accelerate-fft library.
+-- Functions needed for computation of a PsudoWigner transform using the accelerate-fft library.
 --
 -- This module uses the accelerate-fft library. And the base implementation of fft 
 -- uses a naive divide-and-conquer fft implementation
