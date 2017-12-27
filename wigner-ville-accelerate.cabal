@@ -34,7 +34,8 @@ library
 
   other-modules:       Data.Array.Accelerate.Math.Wigner'
                        Data.Array.Accelerate.Math.PseudoWigner,
-                       Data.Array.Accelerate.Math.ChoiWilliams
+                       Data.Array.Accelerate.Math.ChoiWilliams,
+                       Data.Array.Accelerate.Math.BornJordan
 
   build-depends:       base >= 4.7 && < 5 ,
                        accelerate >= 1.2.0.0 , 

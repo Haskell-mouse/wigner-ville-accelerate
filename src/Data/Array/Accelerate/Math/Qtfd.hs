@@ -27,6 +27,7 @@ module Data.Array.Accelerate.Math.Qtfd where
 import Data.Array.Accelerate.Math.Wigner'
 import qualified Data.Array.Accelerate.Math.PseudoWigner as P
 import qualified Data.Array.Accelerate.Math.ChoiWilliams as CW
+import qualified Data.Array.Accelerate.Math.BornJordan as BJ
 import Data.Array.Accelerate as A
 import qualified Data.Array.Accelerate.Math.FFT as AMF
 import qualified Data.Array.Accelerate.Data.Complex as ADC
@@ -87,3 +88,47 @@ choiWilliams_w window sigma arr =
       taumx = P.taumaxs times window
       lims = P.limits taumx
   in A.transpose $ A.map (*2) $ A.map ADC.real $ AMF.fft AMF.Forward $ A.transpose $ CW.sFunc (CW.coreFunction leng sigma) (CW.amatrix_w arr taumx lims window)
+
+bornJordan :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e)
+  => Acc (Array DIM1 (ADC.Complex e))  -- ^ Data array
+  -> A.Exp e                           -- ^ alpha
+  -> Acc (Array DIM2 e) 
+bornJordan arr alpha = 
+  let times = A.enumFromN (A.index1 leng) 0 :: Acc (Array DIM1 Int)
+      leng = A.length arr 
+      taumx = taumaxs times
+      lims = limits taumx
+  in A.transpose $ A.map (*2) $ A.map ADC.real $ AMF.fft AMF.Forward $ A.transpose $ BJ.sFunc (BJ.coreFunction leng alpha) (CW.amatrix arr taumx lims)
+
+bornJordan_test :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e)
+  => Acc (Array DIM1 (ADC.Complex e))  -- ^ Data array
+  -> A.Exp e                           -- ^ alpha
+  -> Acc (Array DIM2 (ADC.Complex e)) 
+bornJordan_test arr alpha = 
+  let times = A.enumFromN (A.index1 leng) 0 :: Acc (Array DIM1 Int)
+      leng = A.length arr 
+      taumx = taumaxs times
+      lims = limits taumx
+  in BJ.sFunc (BJ.coreFunction leng alpha) (BJ.amatrix arr taumx lims)  
+
+bornJordan_matrix :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e)
+  => Acc (Array DIM1 (ADC.Complex e))  -- ^ Data array
+  -> A.Exp e                           -- ^ alpha
+  -> Acc (Array DIM3 (ADC.Complex e)) 
+bornJordan_matrix arr alpha = 
+  let times = A.enumFromN (A.index1 leng) 0 :: Acc (Array DIM1 Int)
+      leng = A.length arr 
+      taumx = taumaxs times
+      lims = limits taumx
+  in  BJ.amatrix arr taumx lims
+
+bornJordan_matrix2 :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e)
+  => Acc (Array DIM1 (ADC.Complex e))  -- ^ Data array
+  -> A.Exp e                           -- ^ alpha
+  -> Acc (Array DIM3 (ADC.Complex e)) 
+bornJordan_matrix2 arr alpha = 
+  let times = A.enumFromN (A.index1 leng) 0 :: Acc (Array DIM1 Int)
+      leng = A.length arr 
+      taumx = taumaxs times
+      lims = limits taumx
+  in  BJ.amatrix arr taumx lims
