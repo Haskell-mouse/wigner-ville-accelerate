@@ -81,7 +81,7 @@ genCore n l u leng sigma =
       l1 = (A.fromIntegral l) - h              -- The same limits
       n1 = cond ((A.fromIntegral n) A.< h) (A.fromIntegral n) (A.fromIntegral (n - leng)) 
       h = A.fromIntegral (leng `div` 2)
-  in cond (n1 A.== 0) (cond (u1 A.== l1) 1.0 0.0) ((1.0 / sqrt ((4.0*pi*n1*n1/sigma))) * exp ((-1.0)*(((u1 - l1)*(u1 - l1))/(4.0*n1*n1/sigma)) ) )
+  in cond (n1 A.== 0) (cond (u1 A.== l1) 1.0 0.0) ((1.0 / sqrt ((16.0*pi*n1*n1/sigma))) * exp ((-1.0)*(((u1 - l1)*(u1 - l1))/(4.0*n1*n1/sigma)) ) )
 
 -- | Product element-by-element result of amatrix and result of coreFunction, and fold it over mu. 
 

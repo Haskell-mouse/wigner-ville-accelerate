@@ -59,7 +59,7 @@ amatrix_w :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e)
   -> Acc (Array DIM1 e)                 -- ^ Smoothing window. Length of it must be odd.
   -> Acc (Array DIM3 (ADC.Complex e))
 amatrix_w arr taumx lims window = 
-  let a = A.transpose $ P.createMatrix arr window taumx lims
+  let a = P.createMatrix arr window taumx lims -- a = A.transpose $ P.createMatrix arr window taumx lims
       leng = A.length arr  
   in A.replicate (A.lift $ A.Z A.:. All A.:. leng A.:. All) a
 
@@ -88,7 +88,7 @@ genCore n l u leng alpha =
       l1 = (A.fromIntegral l) - h              -- The same limits
       n1 = cond ((A.fromIntegral n) A.< h) (A.fromIntegral n) (A.fromIntegral (n - leng)) 
       h = A.fromIntegral (leng `div` 2)
-  in cond (u1 A.<= l1 + alpha*(A.abs n1) A.&& u1 A.>= l1 - alpha*(A.abs n1)) (cond (n1 A.== 0) (cond (u1 A.== l1) 1.0 0.0) (1.0/(2.0*alpha*(A.abs n1)))) 0.0
+  in cond (u1 A.<= l1 + 2*alpha*(A.abs n1) A.&& u1 A.>= l1 - 2*alpha*(A.abs n1)) (cond (n1 A.== 0) (cond (u1 A.== l1) 1.0 0.0) (1.0/(4.0*alpha*(A.abs n1)))) 0.0
 
 -- | Product element-by-element result of amatrix and result of coreFunction, and fold it over mu. 
 
