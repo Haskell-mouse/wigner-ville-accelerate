@@ -47,13 +47,12 @@ hilbert arr =
 
 -- | Scalar myltiplies our vector with h vector and make inverse FFT 
 
-inverseFFT :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e) => 
-  A.Acc (A.Array A.DIM1 (ADC.Complex e)) -> A.Acc (A.Array A.DIM1 e) -> A.Acc (A.Array A.DIM1 (ADC.Complex e))
+inverseFFT :: (Elt (ADC.Complex e),AMF.Numeric e, A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e) => A.Acc (A.Array A.DIM1 (ADC.Complex e)) -> A.Acc (A.Array A.DIM1 e) -> A.Acc (A.Array A.DIM1 (ADC.Complex e))
 inverseFFT arr h = AMF.fft AMF.Inverse $ A.zipWith (A.*) arr (A.map makeComplex h)
 
 -- | Load vector to GPU, make it complex and apply FFT
 
-applyFFt :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e) => 
+applyFFt :: (Elt (ADC.Complex e),AMF.Numeric e, A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e) => 
   A.Acc (A.Array A.DIM1 e) -> A.Acc (A.Array A.DIM1 (ADC.Complex e))
 applyFFt arr = AMF.fft AMF.Forward $ A.map makeComplex $ arr
 
@@ -73,5 +72,5 @@ h s = A.generate (A.index1 size) (\ix -> let A.Z A.:. x = A.unlift ix in def (A.
     defOdd x = A.caseof x [((\y -> (y A.== 0)), 1),
       (\y -> (y A.< ((dsize A.+ 1.0)/2.0)), 2)] 0
 
-makeComplex :: (Floating (A.Exp e), Elt e) => A.Exp e -> A.Exp (ADC.Complex e)
+makeComplex :: (Elt (ADC.Complex e),AMF.Numeric e,Floating (A.Exp e), Elt e) => A.Exp e -> A.Exp (ADC.Complex e)
 makeComplex = (flip ADC.mkPolar) 0.0
