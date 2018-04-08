@@ -9,7 +9,7 @@
 -- Stability   : experimental
 -- Portability : non-portable (GHC extensions)
 --
--- Functions, needed for computation of Choi-Williams transform using the accelerate-fft library.
+-- Functions, needed for computation of Born-Jordan transform using the accelerate-fft library.
 -- Original alghorithm : http://www.dtic.mil/dtic/tr/fulltext/u2/a514435.pdf
 --
 -- This module uses the accelerate-fft library. And the base implementation of fft 
@@ -102,4 +102,4 @@ testfunc date leng =
                 let (A.Z A.:.(u :: A.Exp Int) A.:. (l :: A.Exp Int)) = A.unlift sh 
                 in gentest u l)
       matrix3 = A.replicate (A.lift $ A.Z A.:.All A.:.All A.:.leng) matrix2
-  in A.zipWith (/) date matrix3
+  in A.zipWith (/) date matrix3 

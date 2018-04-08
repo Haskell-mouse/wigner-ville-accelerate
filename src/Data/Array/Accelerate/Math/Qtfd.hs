@@ -97,12 +97,22 @@ bornJordan arr  =
       leng = A.length arr 
       taumx = taumaxs times
       lims = limits taumx
-  in A.transpose $ A.map (*2) $ A.map ADC.real $ AMF.fft AMF.Forward $ A.transpose $ BJ.sFunc (BJ.coreFunction leng) (CW.amatrix arr taumx lims)
+  in A.transpose $ A.map (*2) $ A.map ADC.real $ AMF.fft AMF.Forward $ A.transpose $ BJ.sFunc (BJ.coreFunction leng) (BJ.amatrix arr taumx lims)
 
+bornJordan_m :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e)
+  => Acc (Array DIM1 e) 
+  -> Acc (Array DIM1 (ADC.Complex e))  -- ^ Data array
+  -> Acc (Array DIM2 e)
+bornJordan_m window arr  = 
+  let times = A.enumFromN (A.index1 leng) 0 :: Acc (Array DIM1 Int)
+      leng = A.length arr 
+      taumx = P.taumaxs times window 
+      lims = P.limits taumx
+  in A.transpose $ A.map (*2) $ A.map ADC.real $ AMF.fft AMF.Forward $ A.transpose $ BJ.sFunc (BJ.coreFunction leng) (BJ.amatrix_w arr taumx lims window)
+
+{-
 modifiedB :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e)
   => Acc (Array DIM1 (ADC.Complex e))  -- ^ Data array
   -> A.Exp e                           -- ^ alpha
   -> Acc (Array DIM2 e)
-modifiedB arr alpha 
-
-gFunc :: 
+modifiedB arr alpha -} 

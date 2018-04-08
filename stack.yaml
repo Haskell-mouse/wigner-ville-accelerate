@@ -23,7 +23,7 @@ packages:
     - accelerate-llvm-native
     - accelerate-llvm-ptx  
 
-extra-deps: [gamma-0.9.0.2]
+extra-deps: [gamma-0.9.0.2,continued-fractions-0.9.1.1, converge-0.1.0.1]
 
 # Override default flag values for local packages and extra-deps
 flags:
