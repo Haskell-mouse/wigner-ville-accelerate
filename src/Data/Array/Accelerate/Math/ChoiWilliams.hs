@@ -1,4 +1,5 @@
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE ScopedTypeVariables#-}
 -- |
 -- Module      : Data.Array.Accelerate.Math.Choi-Williams
 -- Copyright   : [2017] Rinat Stryungis
@@ -9,7 +10,7 @@
 -- Portability : non-portable (GHC extensions)
 --
 -- Functions, needed for computation of Choi-Williams transform using the accelerate-fft library.
--- Original alghorithm : http://www.dtic.mil/dtic/tr/fulltext/u2/a514435.pdf
+-- Original alghorithm : https://calhoun.nps.edu/bitstream/handle/10945/4422/09Dec_Hollinger.pdf
 --
 -- This module uses the accelerate-fft library. And the base implementation of fft 
 -- uses a naive divide-and-conquer fft implementation
@@ -54,7 +55,7 @@ amatrix_w :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e)
 amatrix_w arr taumx lims window = 
   let a = A.transpose $ P.createMatrix arr window taumx lims
       leng = A.length arr  
-  in A.replicate (A.lift $ A.Z A.:. All A.:. leng A.:. All) a
+  in A.replicate (A.lift $ A.Z A.:. All A.:. All A.:. leng) a
 
 -- | Create 3D array with kernel function ()
 
@@ -67,12 +68,21 @@ coreFunction leng sigma =
                 let (A.Z A.:.u A.:. l A.:. n) = A.unlift sh 
                 in genCore u l n leng sigma)
 
+coreFunction2 :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e)  -- 
+  => Exp Int                            -- ^ length in each dimention
+  -> Exp e                              -- ^ sigma 
+  -> A.Acc (Array DIM3 e)
+coreFunction2 leng sigma =  
+ (flip testfunc) leng $ A.generate (A.index3 leng leng leng) (\sh -> 
+                            let (A.Z A.:.u A.:. l A.:. n) = A.unlift sh 
+                            in genCore u l n leng sigma)   -- reverse n l and u
+
 -- | generate each value of 3D array with kernel. 
 
 genCore :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e) 
-  => Exp Int                            -- ^ n 
-  -> Exp Int                            -- ^ l 
-  -> Exp Int                            -- ^ mu 
+  => Exp Int                            -- ^ n - Time lag 
+  -> Exp Int                            -- ^ l - Time
+  -> Exp Int                            -- ^ mu - 
   -> Exp Int                            -- ^ length of array
   -> Exp e                              -- ^ sigma
   -> Exp e
@@ -81,7 +91,7 @@ genCore n l u leng sigma =
       l1 = (A.fromIntegral l) - h              -- The same limits
       n1 = cond ((A.fromIntegral n) A.< h) (A.fromIntegral n) (A.fromIntegral (n - leng)) 
       h = A.fromIntegral (leng `div` 2)
-  in cond (n1 A.== 0) (cond (u1 A.== l1) 1.0 0.0) ((1.0 / sqrt ((16.0*pi*n1*n1/sigma))) * exp ((-1.0)*(((u1 - l1)*(u1 - l1))/(4.0*n1*n1/sigma)) ) )
+  in cond (n1 A.== 0) (cond (u1 A.== l1) 1.0 0.0) (((sqrt(sigma))/sqrt ((4.0*pi*n1*n1))) * exp ((-1.0)*(((u1 - l1)*(u1 - l1))*sigma/(4.0*n1*n1)) ) )
 
 -- | Product element-by-element result of amatrix and result of coreFunction, and fold it over mu. 
 
@@ -91,9 +101,14 @@ sFunc :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e)
   -> A.Acc (Array DIM2 (ADC.Complex e))
 sFunc core aMatrix =  A.fold (+) 0 $ A.zipWith (*) (A.map makeComplex core) aMatrix
 
-{-
-divp ::  
-  A.Exp Int 
-  -> A.Exp Int 
-  -> A.Exp Int 
-divp a b = cond (a `A.mod` b A.== 0) (a `A.div` b) ((a `A.div` b) + 1) -}
+testfunc :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e)
+  => A.Acc (Array DIM3 e)
+  -> A.Exp Int
+  -> A.Acc (Array DIM3 e)
+testfunc date leng = 
+  let gentest x y = A.sfoldl (+) 0.0 (A.lift (A.Z A.:. (x :: A.Exp Int) A.:. (y :: A.Exp Int))) date
+      matrix2 = A.generate (A.index2 leng leng) (\sh -> 
+                let (A.Z A.:.(u :: A.Exp Int) A.:. (l :: A.Exp Int)) = A.unlift sh 
+                in gentest u l)
+      matrix3 = A.replicate (A.lift $ A.Z A.:.All A.:.All A.:.leng) matrix2
+  in A.zipWith (/) date matrix3
