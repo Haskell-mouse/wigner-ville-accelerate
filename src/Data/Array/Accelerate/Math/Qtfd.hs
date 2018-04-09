@@ -35,7 +35,7 @@ import qualified Data.Array.Accelerate.Data.Complex as ADC
 -- | Wigner-ville distribution. It takes 1D array of complex floating numbers and returns 2D array of real numbers. 
 --  Columns of result array represents time and rows - frequency. Frequency range is from 0 to n/4, where n is a sampling frequency.
 
-wignerVille :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e)
+wignerVille :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e, Elt (ADC.Complex e), AMF.Numeric e)
   => Acc (Array DIM1 (ADC.Complex e))  -- ^ Data array
   -> Acc (Array DIM2 e) 
 wignerVille arr = 
@@ -49,7 +49,7 @@ wignerVille arr =
 -- It takes 1D array of complex floating numbers, window and returns 2D array of real numbers. 
 -- Columns of result array represents time and rows - frequency. Frequency range is from 0 to n/4, where n is a sampling frequency.
 
-pWignerVille :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e)                                   -- ^ shape of the data array. It is ignored, when compiled with Native or PTX backend. 
+pWignerVille :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e, Elt (ADC.Complex e), AMF.Numeric e)                                   
   => Acc (Array DIM1 e)                -- ^ Smoothing window. Length of it must be odd.
   -> Acc (Array DIM1 (ADC.Complex e))  -- ^ Data array
   -> Acc (Array DIM2 e)
@@ -64,7 +64,7 @@ pWignerVille window arr =
 -- and returns 2D array of real numbers. 
 -- Columns of result array represents time and rows - frequency. Frequency range is from 0 to n/4, where n is a sampling frequency.
 
-choiWilliams :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e)
+choiWilliams :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e, Elt (ADC.Complex e), AMF.Numeric e)
   => Acc (Array DIM1 (ADC.Complex e))  -- ^ Data array
   -> A.Exp e                           -- ^ sigma
   -> Acc (Array DIM2 e) 
@@ -77,7 +77,7 @@ choiWilliams arr sigma =
 
 -- | Choi-Willams with smoothing window in frequency domain
 
-choiWilliams_w :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e)
+choiWilliams_w :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e, Elt (ADC.Complex e), AMF.Numeric e)
   => Acc (Array DIM1 e)                -- ^ Smoothing window. Length of it must be odd.
   -> A.Exp e                           -- ^ sigma
   -> Acc (Array DIM1 (ADC.Complex e))  -- ^ Data array
@@ -89,7 +89,7 @@ choiWilliams_w window sigma arr =
       lims = P.limits taumx
   in A.transpose $ A.map (*2) $ A.map ADC.real $ AMF.fft AMF.Forward $ A.transpose $ CW.sFunc (CW.coreFunction leng sigma) (CW.amatrix_w arr taumx lims window)
 
-bornJordan :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e)
+bornJordan :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e, Elt (ADC.Complex e), AMF.Numeric e)
   => Acc (Array DIM1 (ADC.Complex e))  -- ^ Data array
   -> Acc (Array DIM2 e) 
 bornJordan arr  = 
@@ -99,7 +99,7 @@ bornJordan arr  =
       lims = limits taumx
   in A.transpose $ A.map (*2) $ A.map ADC.real $ AMF.fft AMF.Forward $ A.transpose $ BJ.sFunc (BJ.coreFunction leng) (BJ.amatrix arr taumx lims)
 
-bornJordan_m :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e)
+bornJordan_m :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e, Elt (ADC.Complex e), AMF.Numeric e)
   => Acc (Array DIM1 e) 
   -> Acc (Array DIM1 (ADC.Complex e))  -- ^ Data array
   -> Acc (Array DIM2 e)

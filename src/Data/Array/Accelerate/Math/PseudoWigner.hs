@@ -58,12 +58,12 @@ moveUp taumaxs leng sh =
   let taum t = taumaxs A.!! t 
   in (\(x,t) -> A.index2 ((x+(taum t)) `A.mod` leng) t) $ A.unlift $ A.unindex2 sh
 
-generateValue :: (A.RealFloat e, Elt e) => 
+generateValue :: (A.RealFloat e, Elt e, Elt (ADC.Complex e),AMF.Numeric e) => 
   A.Acc (A.Array A.DIM1 (ADC.Complex e)) -> A.Exp Int -> A.Exp Int -> A.Exp e -> A.Exp (ADC.Complex e)
 generateValue arr time tau h = (makeComplex h) * (arr A.!! (time + tau)) * (ADC.conjugate $ arr A.!! (time - tau))
 
 
-createMatrix :: (A.RealFloat e, Elt e) => 
+createMatrix :: (A.RealFloat e, Elt e,Elt (ADC.Complex e), (AMF.Numeric e)) => 
   A.Acc (A.Array A.DIM1 (ADC.Complex e)) -> A.Acc (A.Array A.DIM1 e) -> A.Acc (A.Array A.DIM1 Int) -> A.Acc (A.Array A.DIM1 Int) -> A.Acc (A.Array A.DIM2 (ADC.Complex e)) 
 createMatrix arr window taumaxs lims = A.backpermute (A.index2 leng leng) (moveUp taumaxs leng) raw 
   where

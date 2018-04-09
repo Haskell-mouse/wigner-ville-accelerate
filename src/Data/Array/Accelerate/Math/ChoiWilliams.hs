@@ -36,7 +36,7 @@ import qualified Data.Array.Accelerate.Data.Complex as ADC
 
 -- | Create matrix of x (t-tau)*(*(x+tau)). And replicate it to third dimension. 
 
-amatrix :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e) 
+amatrix :: (Elt (ADC.Complex e),A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e) 
   => Acc (Array DIM1 (ADC.Complex e))   -- ^ Data array
   -> Acc (Array DIM1 Int)               -- ^ taumaxs
   -> Acc (Array DIM1 Int)               -- ^ limits 
@@ -46,7 +46,7 @@ amatrix arr taumx lims =
       leng = A.length arr  
   in A.replicate (A.lift $ A.Z A.:. All A.:. leng A.:. All) a
 
-amatrix_w :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e) 
+amatrix_w :: (A.RealFloat e,Elt (ADC.Complex e),AMF.Numeric e, A.IsFloating e, A.FromIntegral Int e, Elt e) 
   => Acc (Array DIM1 (ADC.Complex e))   -- ^ Data array
   -> Acc (Array DIM1 Int)               -- ^ taumaxs
   -> Acc (Array DIM1 Int)               -- ^ limits 
@@ -95,7 +95,7 @@ genCore n l u leng sigma =
 
 -- | Product element-by-element result of amatrix and result of coreFunction, and fold it over mu. 
 
-sFunc :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e)
+sFunc :: (Elt (ADC.Complex e),AMF.Numeric e,A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e)
   => A.Acc (Array DIM3 e)               -- ^ core 3D array       
   -> A.Acc (Array DIM3 (ADC.Complex e)) -- ^ result of amatrix
   -> A.Acc (Array DIM2 (ADC.Complex e))

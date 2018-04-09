@@ -38,7 +38,7 @@ import qualified Data.Array.Accelerate.Data.Complex as ADC
 -- The FFI-backed implementations ignore the Haskell-side size parameter (first
 -- argument).
 
-hilbert :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e) => 
+hilbert :: (A.RealFloat e, Elt (ADC.Complex e), AMF.Numeric e,  Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e) => 
   A.Acc (A.Array A.DIM1 e) -> A.Acc (A.Array A.DIM1 (ADC.Complex e))
 hilbert arr = 
   let leng = A.length arr 
@@ -58,7 +58,7 @@ applyFFt arr = AMF.fft AMF.Forward $ A.map makeComplex $ arr
 
 -- | Form Vector that will be scalar multiplied with our spectre vector.
 
-h :: (A.RealFloat e, Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e) =>  
+h :: (A.RealFloat e,Elt (ADC.Complex e) , Fractional (A.Exp e), Floating (A.Exp e), A.IsFloating e, A.FromIntegral Int e, Elt e) =>  
   A.Acc (A.Scalar Int) -> A.Acc (A.Array A.DIM1 e)
 h s = A.generate (A.index1 size) (\ix -> let A.Z A.:. x = A.unlift ix in def (A.fromIntegral x :: A.Exp Float))
   where 
