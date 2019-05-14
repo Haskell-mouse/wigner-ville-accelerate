@@ -32,15 +32,19 @@ library
                        Data.Array.Accelerate.Math.Hilbert, 
                        Data.Array.Accelerate.Math.WindowFunc 
 
-  other-modules:       Data.Array.Accelerate.Math.Wigner'
+                       Data.Array.Accelerate.Math.Wigner'
                        Data.Array.Accelerate.Math.PseudoWigner,
                        Data.Array.Accelerate.Math.ChoiWilliams,
                        Data.Array.Accelerate.Math.BornJordan
+                       Data.Array.Accelerate.Math.ModifiedB
+
+  other-modules:      
 
   build-depends:       base >= 4.7 && < 5 ,
                        accelerate >= 1.2.0.0 , 
                        accelerate-fft >= 1.2.0.0,
-                       gamma
+                       gamma,
+                       lens-accelerate
   default-language:    Haskell2010
 
 test-suite wigner-test

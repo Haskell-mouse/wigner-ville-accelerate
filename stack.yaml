@@ -1,29 +1,41 @@
 
-resolver: nightly-2017-10-31
+resolver: lts-13.3
 
 packages:
 - '.'
 
-- location: 
-    git: https://github.com/AccelerateHS/accelerate-fft.git
-    commit: 07e8c4edf76641c585ec2eb58b04817d50cfcaf0
+- location:
+    git: https://github.com/Haskell-mouse/accelerate-fft.git
+    commit: 5c19c3865a7cc6adc23cdc33b6c3e93e2667129a
   extra-dep: true
 
 - location:
     git:    https://github.com/tmcdonell/accelerate.git
-    commit: b73188966e43c4279cf7522d9309f2d90f86eb12
+    commit: cfa1f48bef0e8d5bf2bec60a11ade2cac2153a9d
   extra-dep: true
 
 - location:
     git:    https://github.com/tmcdonell/accelerate-llvm.git
-    commit: ed24942cdebfdab34c8214296d85cc08f3111e43
+    commit: e0f1a7676d160168440ed8338f2054014976646b
   extra-dep: true
   subdirs:
     - accelerate-llvm
     - accelerate-llvm-native
     - accelerate-llvm-ptx  
 
-extra-deps: [gamma-0.9.0.2,continued-fractions-0.9.1.1, converge-0.1.0.1]
+- location: 
+    git: https://github.com/tmcdonell/lens-accelerate
+    commit: b74eb8098735b1ad6cff3c5655af03d3f29b9f8e
+  extra-dep: true
+
+extra-deps: 
+  - continued-fractions-0.10.0.2
+  - converge-0.1.0.1
+  - llvm-hs-8.0.0
+  - gamma-0.10.0.0
+  - llvm-hs-pure-8.0.0
+
+
 
 # Override default flag values for local packages and extra-deps
 flags:
@@ -36,4 +48,7 @@ flags:
 
 # Extra package databases containing global packages
 extra-package-dbs: []
+
+extra-lib-dirs: 
+  - /usr/local/cuda-10.0/lib64
 
