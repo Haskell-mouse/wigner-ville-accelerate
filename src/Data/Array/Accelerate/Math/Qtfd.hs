@@ -83,7 +83,7 @@ choiWilliams :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e, Elt
   -> Maybe (Acc (Array DIM1 e), Acc (Array DIM1 e))
   -> A.Exp Int                         -- ^ Smoothing window over mu, must be odd and symmetrical
   -> A.Exp Int                         -- ^ Smoothing window over tau, must be odd and symmetrical
-  -> Bool                              -- ^ If both windows are rectangular
+  -> Bool                              -- ^ If normalise
   -> Acc (Array DIM1 (ADC.Complex e))  -- ^ Data array
   -> Acc (Array DIM2 e)
 choiWilliams sigma mWindowArrays uWindow nWindow normalise arr =
@@ -95,20 +95,6 @@ choiWilliams sigma mWindowArrays uWindow nWindow normalise arr =
     AMF.fft AMF.Forward $
       CW.summedOverMu arr taumx lims sigma mWindowArrays uWindow nWindow normalise
 
--- | Choi-Willams with smoothing window in frequency domain
-
-{-choiWilliams_w :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e, Elt (ADC.Complex e), AMF.Numeric e)
-  => Acc (Array DIM1 e)                -- ^ Smoothing window. Length of it must be odd.
-  -> A.Exp e                           -- ^ sigma
-  -> Acc (Array DIM1 (ADC.Complex e))  -- ^ Data array
-  -> Acc (Array DIM2 e)
-choiWilliams_w window sigma arr =
-  let times = A.enumFromN (A.index1 leng) 0 :: Acc (Array DIM1 Int)
-      leng = A.length arr
-      taumx = P.taumaxs times window
-      lims = P.limits taumx
-  in A.transpose $ A.map (*2) $ A.map ADC.real $ AMF.fft AMF.Forward $ A.transpose $ CW.sFunc (CW.coreFunction leng sigma) (CW.amatrix_w arr taumx lims window)
--}
 bornJordan :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e, Elt (ADC.Complex e), AMF.Numeric e)
   => A.Exp e                           -- ^ sigma
   -> Maybe (Acc (Array DIM1 e), Acc (Array DIM1 e))
@@ -124,31 +110,23 @@ bornJordan sigma mWindowArrays uWindow nWindow arr =
   in A.transpose $ A.map ((*2) . ADC.real) $
     AMF.fft AMF.Forward $
       BJ.summedOverMu arr taumx lims sigma mWindowArrays uWindow nWindow
-{-bornJordan_m :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e, Elt (ADC.Complex e), AMF.Numeric e)
-  => Acc (Array DIM1 e)
-  -> Acc (Array DIM1 (ADC.Complex e))  -- ^ Data array
-  -> Acc (Array DIM2 e)
-bornJordan_m window arr  =
-  let times = A.enumFromN (A.index1 leng) 0 :: Acc (Array DIM1 Int)
-      leng = A.length arr
-      taumx = P.taumaxs times window
-      lims = P.limits taumx
-  in A.transpose $ A.map (*2) $ A.map ADC.real $ AMF.fft AMF.Forward $ A.transpose $ BJ.sFunc (BJ.coreFunction leng) (BJ.amatrix_w arr taumx lims window)
--}
 
-modifiedB :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e, Elt (ADC.Complex e), AMF.Numeric e)
+
+eModifiedB :: (A.RealFloat e, A.IsFloating e, A.FromIntegral Int e, Elt e, Elt (ADC.Complex e), AMF.Numeric e)
   => A.Exp e                           -- ^ alpha
   -> (Acc (Array DIM1 e))              -- ^ gammas
+  -> Maybe (Acc (Array DIM1 e), Acc (Array DIM1 e))
   -> A.Exp Int
   -> A.Exp Int
+  -> Bool 
   -> Acc (Array DIM1 (ADC.Complex e))  -- ^ Data array
   -> Acc (Array DIM2 e)
-modifiedB alpha gammas uWindow nWindow arr =
+eModifiedB alpha gammas mWindowArrays uWindow nWindow normalise arr =
   let times = A.enumFromN (A.index1 leng) 0 :: Acc (Array DIM1 Int)
       leng = A.length arr
       taumx = taumaxs times
       lims = limits taumx
-  in A.transpose $ A.map (*2) $ A.map ADC.real $ AMF.fft AMF.Forward $ A.transpose $ EMB.sFunc (EMB.coreFunction leng alpha gammas uWindow nWindow) (EMB.amatrix arr taumx lims)
+  in A.transpose $ A.map (*2) $ A.map ADC.real $ AMF.fft AMF.Forward $ A.transpose $ EMB.summedOverMu arr taumx lims alpha gammas mWindowArrays uWindow nWindow normalise
 
 makeGammaArray2 :: Double -> Int -> [Double]
 makeGammaArray2 beta wLength =
